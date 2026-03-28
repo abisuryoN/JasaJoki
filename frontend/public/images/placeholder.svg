@@ -1,0 +1,8 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" rx="40" fill="#0F172A"/>
+  <rect x="1" y="1" width="198" height="198" rx="39" stroke="#1E293B" stroke-width="2"/>
+  <path d="M70 110L90 90L130 130H70V110Z" fill="#334155"/>
+  <path d="M100 120L115 105L140 130H100V120Z" fill="#475569"/>
+  <circle cx="120" cy="80" r="10" fill="#334155"/>
+  <text x="50%" y="160" dominant-baseline="middle" text-anchor="middle" fill="#475569" font-family="sans-serif" font-size="12" font-weight="bold" style="text-transform: uppercase; letter-spacing: 0.1em;">Preview Error</text>
+</svg>
