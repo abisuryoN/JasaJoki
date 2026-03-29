@@ -1,16 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-import { FaHome, FaComments, FaClipboardList, FaSignOutAlt, FaPen, FaQuestionCircle } from 'react-icons/fa';
-import { useChat } from '../ChatContext';
+import { FaHome, FaClipboardList, FaSignOutAlt, FaPen, FaQuestionCircle } from 'react-icons/fa';
 
 export default function AdminLayout({ children }) {
     const { user, logout } = useAuth();
-    const chat = useChat() || {};
-    const { unreadCounts = {} } = chat;
     const location = useLocation();
-
-    const totalUnread = Object.values(unreadCounts || {}).reduce((a, b) => a + b, 0);
 
     if (user?.role !== 'admin') {
         return <div className="p-10 text-center text-red-500">Akses Ditolak</div>;
@@ -18,7 +13,6 @@ export default function AdminLayout({ children }) {
 
     const menu = [
         { name: 'Dashboard', path: '/admin', icon: <FaHome /> },
-        { name: 'Live Chat', path: '/admin/chat', icon: <FaComments /> },
         { name: 'Manajemen Order', path: '/admin/orders', icon: <FaClipboardList /> },
         { name: 'Manajemen Revisi', path: '/admin/revisions', icon: <FaPen /> },
         { name: 'Halaman Bantuan', path: '/admin/help', icon: <FaQuestionCircle /> },
@@ -43,11 +37,6 @@ export default function AdminLayout({ children }) {
                             >
                                 {item.icon}
                                 {item.name}
-                                {item.name === 'Live Chat' && totalUnread > 0 && (
-                                    <span className="ml-auto bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-lg animate-pulse shadow-lg shadow-red-500/20">
-                                        {totalUnread}
-                                    </span>
-                                )}
                             </Link>
                         );
                     })}

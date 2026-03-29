@@ -4,14 +4,14 @@ import api from '../api';
 import {
     FaFileDownload, FaClock, FaCheckCircle, FaTools,
     FaPen, FaHistory, FaPlus, FaCreditCard, FaStar,
-    FaRegCommentDots, FaChevronRight
+    FaRegCommentDots, FaChevronRight, FaWhatsapp
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import OrderDetail from '../components/OrderDetail';
 import FilePreviewModal from '../components/FilePreviewModal';
-import { getEcho } from '../utils/echo';
 import { useNotification } from '../NotificationContext';
+import { generateWhatsAppUrl } from '../utils/whatsapp';
 
 export default function UserDashboard() {
     const { user } = useAuth();
@@ -38,19 +38,7 @@ export default function UserDashboard() {
 
     useEffect(() => {
         fetchOrders();
-
-        if (user?.id) {
-            const echo = getEcho();
-            if (!echo) return;
-
-            echo.channel(`user.${user.id}`)
-                .listen('OrderStatusUpdated', () => {
-                    fetchOrders(pagination.current_page);
-                });
-
-            return () => echo.leave(`user.${user.id}`);
-        }
-    }, [user?.id, pagination.current_page]);
+    }, [pagination.current_page]);
 
     const fetchOrders = async (page = 1, perPage = pagination.per_page) => {
         setLoading(true);
@@ -141,7 +129,15 @@ export default function UserDashboard() {
                         </h1>
                         <p className="text-slate-400 font-medium">Selamat datang kembali, <span className="text-white">{user?.name}</span></p>
                     </motion.div>
-                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-4">
+                        <a 
+                            href={generateWhatsAppUrl(user)} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold transition shadow-lg shadow-emerald-500/20 active:scale-95"
+                        >
+                            <FaWhatsapp /> Hubungi Admin
+                        </a>
                         <Link to="/order/new" className="inline-flex items-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition shadow-lg shadow-blue-500/20 active:scale-95">
                             <FaPlus /> Buat Order Baru
                         </Link>

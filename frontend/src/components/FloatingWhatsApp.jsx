@@ -1,11 +1,15 @@
 import React from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { useAuth } from '../AuthContext';
+import { generateWhatsAppUrl } from '../utils/whatsapp';
 
 export default function FloatingWhatsApp() {
+    const { user } = useAuth();
+    
     return (
         <a 
-            href="https://wa.me/6281234567890?text=Halo%20JasaJoki,%20saya%20ingin%20konsultasi" 
+            href={generateWhatsAppUrl(user)} 
             target="_blank" 
             rel="noreferrer"
             className="fixed bottom-6 right-6 z-[100] flex items-center justify-center group outline-none"

@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
     FaTimes, FaDownload, FaCalendarAlt, FaHistory, 
     FaCheckCircle, FaExclamationCircle, FaSearchPlus,
-    FaCode, FaWallet, FaUserCircle, FaLayerGroup, FaArrowRight
+    FaCode, FaWallet, FaUserCircle, FaLayerGroup, FaArrowRight, FaWhatsapp
 } from 'react-icons/fa';
 import SecureImage from './SecureImage';
+import { useAuth } from '../AuthContext';
+import { generateWhatsAppUrl } from '../utils/whatsapp';
 
 const StatusBadge = ({ status }) => {
     const styles = {
@@ -213,14 +215,9 @@ export default function OrderDetail({ order, onClose }) {
                                         <span className="text-xs font-bold">MENUNGGU PEMBAYARAN</span>
                                     </div>
                                 )}
-                            </section>
-
-                            {/* Result Action */}
-                            {order.result_path && (
-                                <section className="p-6 rounded-[32px] bg-emerald-500/10 border border-emerald-500/20 space-y-4">
-                                    <div className="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-widest">
-                                        <FaCheckCircle /> Hasil Selesai
-                                    </div>
+                            </section>                            {/* Result Action & WhatsApp Contact */}
+                            <section className="space-y-3">
+                                {order.result_path && (
                                     <button 
                                         onClick={() => {
                                             // Handle download via api instance
@@ -236,12 +233,21 @@ export default function OrderDetail({ order, onClose }) {
                                             };
                                             downloadResult();
                                         }}
-                                        className="w-full flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-500 text-white p-4 rounded-2xl font-bold transition shadow-lg shadow-emerald-600/20 active:scale-95 group"
+                                        className="w-full flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-400 text-white p-4 rounded-2xl font-bold transition shadow-lg shadow-emerald-600/20 active:scale-95 group"
                                     >
                                         <FaDownload /> Download Hasil <FaArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                                     </button>
-                                </section>
-                            )}
+                                )}
+                                
+                                <a 
+                                    href={generateWhatsAppUrl(user, { orderId: order.id, serviceName: order.title })}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="w-full flex items-center justify-center gap-3 bg-slate-800 hover:bg-slate-700 text-white p-4 rounded-2xl font-bold transition border border-white/5 active:scale-95 group"
+                                >
+                                    <FaWhatsapp className="text-emerald-500" /> Tanya Admin via WA
+                                </a>
+                            </section>
                         </div>
                     </div>
                 </div>

@@ -4,15 +4,12 @@ import App from './App.jsx'
 import './index.css'
 import { AuthProvider } from './AuthContext'
 import { NotificationProvider } from './NotificationContext'
-import { ChatProvider } from './ChatContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
         <NotificationProvider>
-            <ChatProvider>
-                <App />
-            </ChatProvider>
+            <App />
         </NotificationProvider>
     </AuthProvider>
   </React.StrictMode>,

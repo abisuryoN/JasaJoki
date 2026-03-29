@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\RevisionController;
 use App\Http\Controllers\HelpPageController;
@@ -20,24 +19,6 @@ Route::group(['prefix' => 'auth'], function () {
     Route::middleware('auth:api')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
-    });
-});
-
-// ==========================================
-// CHAT
-// ==========================================
-Route::group(['prefix' => 'chat'], function () {
-    Route::post('rooms', [ChatController::class, 'store']);
-    Route::get('rooms/{id}/messages', [ChatController::class, 'getMessages']);
-    Route::post('rooms/{id}/messages', [ChatController::class, 'sendMessage']);
-    Route::post('rooms/{id}/read', [ChatController::class, 'markAsRead']);
-    Route::post('rooms/{id}/typing', [ChatController::class, 'sendTyping']);
-
-    Route::middleware('auth:api')->group(function () {
-        Route::get('rooms', [ChatController::class, 'index']);
-        Route::get('rooms/user', [ChatController::class, 'getUserRoom']);
-        Route::get('rooms/user/{userId}', [ChatController::class, 'getByUserId']);
-        Route::delete('rooms/{id}', [ChatController::class, 'destroy']);
     });
 });
 

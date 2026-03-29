@@ -2,7 +2,6 @@ import React from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import FloatingWhatsApp from './FloatingWhatsApp';
-import ChatWidget from './ChatWidget';
 
 export default function Layout({ children }) {
     return (
@@ -13,7 +12,6 @@ export default function Layout({ children }) {
             </main>
             <Footer />
             <FloatingWhatsApp />
-            <ChatWidget />
         </div>
     );
 }

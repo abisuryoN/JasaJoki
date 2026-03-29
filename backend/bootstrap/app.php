@@ -16,10 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ['prefix' => 'api', 'middleware' => ['api', 'auth:api']],
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->api(append: [
-            \App\Http\Middleware\UpdateLastSeen::class,
-        ]);
+        // ✅ SUDAH BERSIH (tidak ada UpdateLastSeen lagi)
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();

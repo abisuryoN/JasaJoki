@@ -8,7 +8,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import OrderDetail from '../components/OrderDetail';
 import FilePreviewModal from '../components/FilePreviewModal';
-import { getEcho } from '../utils/echo';
 
 export default function AdminOrders() {
     const [orders, setOrders] = useState([]);
@@ -29,16 +28,6 @@ export default function AdminOrders() {
 
     useEffect(() => {
         fetchOrders();
-
-        const echo = getEcho();
-        if (!echo) return;
-
-        echo.channel('admin-orders')
-            .listen('OrderStatusUpdated', () => {
-                fetchOrders(pagination.current_page);
-            });
-
-        return () => echo.leave('admin-orders');
     }, [pagination.current_page]);
 
     const fetchOrders = async (page = 1, perPage = pagination.per_page) => {
