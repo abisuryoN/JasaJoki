@@ -22,7 +22,9 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'email',
+        'username',
         'password',
+        'is_default_password',
         'phone',
         'avatar',
         'google_id',
@@ -50,6 +52,7 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_default_password' => 'boolean',
             'last_seen' => 'datetime',
         ];
     }
@@ -74,8 +77,5 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Order::class, 'assigned_to');
     }
 
-    public function chatRooms()
-    {
-        return $this->hasMany(ChatRoom::class);
-    }
+
 }

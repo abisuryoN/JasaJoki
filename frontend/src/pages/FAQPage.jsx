@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronDown, FaQuestionCircle } from 'react-icons/fa';
+import SEO from '../components/SEO';
 
 export default function FAQPage() {
     const faqs = [
@@ -24,6 +25,12 @@ export default function FAQPage() {
 
     return (
         <div className="min-h-screen bg-[#020617] pt-32 pb-20 px-4">
+            <SEO 
+                title="FAQ - Pertanyaan Seputar Jasa Joki Koding"
+                description="Temukan jawaban atas pertanyaan umum seputar layanan jasa joki web, sistem pembayaran, garansi revisi, dan cara pemesanan di JasaJoki."
+                keywords="faq jasa joki, tanya jawab jasa coding, garansi joki web, sistem bayar joki"
+                canonicalUrl="/faq"
+            />
             <div className="max-w-3xl mx-auto">
                 <div className="text-center mb-16">
                     <motion.div 

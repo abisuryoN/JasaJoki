@@ -14,6 +14,7 @@ import ReviewSection from '../components/ReviewSection';
 import JourneyFlow from '../components/JourneyFlow';
 import { generateWhatsAppUrl } from '../utils/whatsapp';
 import api from '../api';
+import SEO from '../components/SEO';
 
 export default function LandingPage() {
     const { user } = useAuth();
@@ -71,6 +72,11 @@ export default function LandingPage() {
 
     return (
         <div className="bg-[#020617] text-slate-100 selection:bg-blue-500/30 overflow-x-hidden">
+            <SEO 
+                title="Solusi Jasa Joki Web & Pengerjaan Project IT Terpercaya"
+                description="Jasa Joki Web, Pengerjaan Project IT, dan Tugas Pemrograman Terpercaya. Solusi cepat, berkualitas, dan transparan untuk mahasiswa dan startup. Konsultasi gratis!"
+                keywords="jasa joki web, jasa joki koding, pengerjaan tugas pemrograman, jasa pembuatan website, joki skripsi informatika, jasa koding mahasiswa, bantuan coding"
+            />
             {/* Hero Section */}
             <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
                 {/* Background Decor */}

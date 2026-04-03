@@ -7,8 +7,6 @@ use App\Models\Payment;
 use App\Models\User;
 use App\Notifications\OrderNotification;
 use App\Services\WhatsAppService;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -115,15 +113,7 @@ class PaymentController extends Controller
         $status = $user->role === 'admin' ? 'approved' : 'pending';
 
         $file = $request->file('proof_image');
-        $fileName = 'payment_proof_' . uniqid() . '.jpg';
-        $path = 'payment_proofs/' . $fileName;
-
-        $manager = new ImageManager(new Driver());
-        $image = $manager->read($file->getRealPath());
-        $image->scaleDown(width: 1920);
-        $encoded = $image->toJpeg(75);
-        
-        Storage::disk('public')->put($path, $encoded->toString());
+        $path = $file->store('payment_proofs', 'public');
 
         $payment = Payment::create([
             'order_id' => $order->id,
@@ -192,7 +182,7 @@ class PaymentController extends Controller
         $statusText = $request->status === 'approved' ? 'disetujui ✅' : 'ditolak ❌';
         $order->user->notify(new OrderNotification([
             'title' => 'Update Pembayaran',
-            'message' => "Pembayaran Rp " . number_format($payment->amount, 0, ',', '.') . " untuk Order #{$order->id} {$statusText}",
+            'message' => "Pembayaran Rp " . number_format((float) $payment->amount, 0, ',', '.') . " untuk Order #{$order->id} {$statusText}",
             'url' => '/dashboard',
             'type' => 'payment_status',
         ]));

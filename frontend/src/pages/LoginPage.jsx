@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 export default function LoginPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
-    const [email, setEmail] = useState('');
+    const [loginInput, setLoginInput] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -18,11 +18,11 @@ export default function LoginPage() {
         setLoading(true);
         setError('');
         try {
-            const res = await api.post('/auth/login', { email, password });
+            const res = await api.post('/auth/login', { login: loginInput, password });
             login(res.data.access_token, res.data.user);
             navigate(res.data.user.role === 'admin' ? '/admin' : '/dashboard');
         } catch (err) {
-            setError('Login gagal. Periksa kembali email dan password.');
+            setError('Login gagal. Periksa kembali email/username dan password.');
         } finally {
             setLoading(false);
         }
@@ -82,13 +82,13 @@ export default function LoginPage() {
                                 <FaEnvelope />
                             </div>
                             <input
-                                id="email"
-                                type="email"
+                                id="login"
+                                type="text"
                                 required
                                 className="block w-full pl-11 pr-4 py-3.5 border border-slate-700/50 rounded-xl bg-slate-900/50 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all font-medium text-sm"
-                                placeholder="Alamat Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Alamat Email / Username"
+                                value={loginInput}
+                                onChange={(e) => setLoginInput(e.target.value)}
                             />
                         </div>
                         <div className="relative group">

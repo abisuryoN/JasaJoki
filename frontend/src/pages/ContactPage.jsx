@@ -1,10 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaWhatsapp, FaEnvelope, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa';
+import SEO from '../components/SEO';
 
 export default function ContactPage() {
     return (
         <div className="min-h-screen bg-[#020617] pt-32 pb-20 px-4">
+            <SEO 
+                title="Hubungi Kami - Konsultasi Gratis Project IT"
+                description="Hubungi JasaJoki untuk konsultasi gratis mengenai project IT, tugas koding, atau pengerjaan website Anda. Respon cepat 24/7."
+                keywords="hubungi jasa joki, kontak jasa coding, konsultasi project it, bantuan tugas pemrograman"
+                canonicalUrl="/contact"
+            />
             <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-6xl font-black text-white mb-4">Hubungi Kami</h1>

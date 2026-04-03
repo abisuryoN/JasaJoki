@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-import { FaUsers, FaClipboardList, FaComments, FaCheckCircle, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaUsers, FaClipboardList, FaComments, FaCheckCircle, FaChevronLeft, FaChevronRight, FaExclamationTriangle, FaLock, FaKey } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
+import { motion } from 'framer-motion';
 
 export default function AdminDashboard() {
+    const { user } = useAuth();
     const [stats, setStats] = useState({ orders: 0, pending: 0, chats: 0 });
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
+    const [passwordData, setPasswordData] = useState({
+        current_password: '',
+        new_password: '',
+        new_password_confirmation: ''
+    });
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordSuccess, setPasswordSuccess] = useState('');
+    const [passwordLoading, setPasswordLoading] = useState(false);
+
     const [recentOrders, setRecentOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [pagination, setPagination] = useState({
@@ -44,6 +57,25 @@ export default function AdminDashboard() {
         }
     };
 
+    const handlePasswordChange = async (e) => {
+        e.preventDefault();
+        setPasswordError('');
+        setPasswordSuccess('');
+        setPasswordLoading(true);
+
+        try {
+            const res = await api.post('/auth/change-password', passwordData);
+            setPasswordSuccess(res.data.message);
+            setIsChangingPassword(false);
+            setPasswordData({ current_password: '', new_password: '', new_password_confirmation: '' });
+            setTimeout(() => window.location.reload(), 2000);
+        } catch (err) {
+            setPasswordError(err.response?.data?.error || 'Gagal memperbarui password.');
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
+
     const getStatusStyle = (status) => {
         switch (status) {
             case 'pending': return 'bg-slate-800 text-slate-300 border-slate-600';
@@ -58,7 +90,7 @@ export default function AdminDashboard() {
 
     if (loading && recentOrders.length === 0) {
         return (
-            <div className="flex justify-center items-center h-full">
+            <div className="flex justify-center items-center h-screen text-white bg-slate-900">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
         );
@@ -71,9 +103,94 @@ export default function AdminDashboard() {
     ];
 
     return (
-        <div className="pb-10">
-            <h1 className="text-3xl font-bold text-white mb-8">Ikhtisar Panel Admin</h1>
-            
+        <div className="pb-10 relative">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold text-white">Ikhtisar Panel Admin</h1>
+                <button 
+                    onClick={() => setIsChangingPassword(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition"
+                >
+                    <FaKey size={14} /> Ganti Password
+                </button>
+            </div>
+
+            {user?.is_default_password && (
+                <motion.div 
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-8 p-4 bg-red-500/20 border border-red-500/30 rounded-2xl flex items-center gap-4 text-red-400"
+                >
+                    <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0 animate-pulse">
+                        <FaExclamationTriangle size={24} />
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-lg">Keamanan Kritis: Akun Default Terdeteksi!</h4>
+                        <p className="text-sm opacity-90">Ini akun default segera ganti pw nya demi keamanan sistem.</p>
+                    </div>
+                </motion.div>
+            )}
+
+            {isChangingPassword && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="glass max-w-md w-full p-8 rounded-[32px] border border-slate-700 shadow-2xl relative"
+                    >
+                        <button onClick={() => setIsChangingPassword(false)} className="absolute top-6 right-6 text-slate-500 hover:text-white transition">✕</button>
+                        <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <FaLock className="text-blue-500" /> Perbarui Password
+                        </h3>
+
+                        {passwordError && <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-sm rounded-xl">{passwordError}</div>}
+                        {passwordSuccess && <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-sm rounded-xl">{passwordSuccess}</div>}
+
+                        <form onSubmit={handlePasswordChange} className="space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Password Saat Ini</label>
+                                <input 
+                                    type="password" 
+                                    required 
+                                    value={passwordData.current_password}
+                                    onChange={(e) => setPasswordData({...passwordData, current_password: e.target.value})}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none transition" 
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Password Baru</label>
+                                <input 
+                                    type="password" 
+                                    required 
+                                    value={passwordData.new_password}
+                                    onChange={(e) => setPasswordData({...passwordData, new_password: e.target.value})}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none transition" 
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Konfirmasi Password Baru</label>
+                                <input 
+                                    type="password" 
+                                    required 
+                                    value={passwordData.new_password_confirmation}
+                                    onChange={(e) => setPasswordData({...passwordData, new_password_confirmation: e.target.value})}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none transition" 
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            <button 
+                                type="submit" 
+                                disabled={passwordLoading}
+                                className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition shadow-lg shadow-blue-600/20 active:scale-95 disabled:opacity-50"
+                            >
+                                {passwordLoading ? 'Menyimpan...' : 'Simpan Perubahan'}
+                            </button>
+                        </form>
+                    </motion.div>
+                </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {statCards.map((stat, i) => (
                     <div key={i} className="glass p-6 rounded-2xl flex items-center justify-between border border-slate-700 hover:border-blue-500/50 transition-colors">

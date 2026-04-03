@@ -14,16 +14,47 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
+        $input = $request->validate([
+            'login' => 'required|string',
             'password' => 'required|string',
         ]);
 
+        $fieldType = filter_var($input['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        
+        $credentials = [
+            $fieldType => $input['login'],
+            'password' => $input['password']
+        ];
+
         if (! $token = Auth::guard('api')->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Kombinasi email/username dan password salah.'], 401);
         }
 
         return $this->respondWithToken($token);
+    }
+
+    /**
+     * Change the authenticated User's password.
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:4|confirmed',
+        ]);
+
+        $user = Auth::guard('api')->user();
+
+        if (!\Hash::check($request->current_password, $user->password)) {
+            return response()->json(['error' => 'Password saat ini salah.'], 422);
+        }
+
+        $user->update([
+            'password' => \Hash::make($request->new_password),
+            'is_default_password' => false
+        ]);
+
+        return response()->json(['message' => 'Password berhasil diperbarui.']);
     }
 
     /**

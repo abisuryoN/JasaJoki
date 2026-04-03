@@ -5,12 +5,16 @@ import './index.css'
 import { AuthProvider } from './AuthContext'
 import { NotificationProvider } from './NotificationContext'
 
+import { HelmetProvider } from 'react-helmet-async'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthProvider>
-        <NotificationProvider>
-            <App />
-        </NotificationProvider>
-    </AuthProvider>
+    <HelmetProvider>
+        <AuthProvider>
+            <NotificationProvider>
+                <App />
+            </NotificationProvider>
+        </AuthProvider>
+    </HelmetProvider>
   </React.StrictMode>,
 )
