@@ -8,7 +8,7 @@ export default function ContactPage() {
         <div className="min-h-screen bg-[#020617] pt-32 pb-20 px-4">
             <SEO 
                 title="Hubungi Kami - Konsultasi Gratis Project IT"
-                description="Hubungi JasaJoki untuk konsultasi gratis mengenai project IT, tugas koding, atau pengerjaan website Anda. Respon cepat 24/7."
+                description="Hubungi DualCode untuk konsultasi gratis mengenai project IT, tugas koding, atau pengerjaan website Anda. Respon cepat 24/7."
                 keywords="hubungi jasa joki, kontak jasa coding, konsultasi project it, bantuan tugas pemrograman"
                 canonicalUrl="/contact"
             />

@@ -2,12 +2,12 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const SEO = ({ title, description, keywords, ogImage, canonicalUrl }) => {
-    const siteTitle = "JasaJoki - Solusi Jasa Joki Web & Pengerjaan Project IT";
+    const siteTitle = "DualCode - Solusi Project IT & Pengerjaan Software Premium";
     const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
-    const defaultDescription = "JasaJoki - Solusi Jasa Joki Web & Pengerjaan Project IT Terpercaya. Bantu tugas koding, website mahasiswa, dan project startup dengan kualitas premium.";
+    const defaultDescription = "DualCode - Solusi Jasa Pembuatan Web & Pengerjaan Project IT Terpercaya. Bantu tugas koding, website perusahaan, dan project startup dengan kualitas premium.";
     const metaDescription = description || defaultDescription;
-    const metaKeywords = keywords ? `${keywords}, jasa joki web, jasa joki koding` : "jasa joki web, jasa joki koding, pengerjaan tugas pemrograman, jasa pembuatan website, joki skripsi informatika";
-    const siteUrl = "https://jasajoki.com";
+    const metaKeywords = keywords ? `${keywords}, dualcode web, jasa coding` : "dualcode, jasa joki web, jasa joki koding, pengerjaan tugas pemrograman, jasa pembuatan website, joki skripsi informatika";
+    const siteUrl = "https://dualcode.id";
     const fullCanonicalUrl = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
 
     return (

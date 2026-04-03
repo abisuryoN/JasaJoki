@@ -30,7 +30,7 @@ export default function TermsPage() {
 
                     <section>
                         <h2 className="text-xl font-bold text-slate-200 mb-4 tracking-tight">5. Tanggung Jawab</h2>
-                        <p>JasaJoki tidak bertanggung jawab atas penyalahgunaan hasil pekerjaan oleh client. Hasil pekerjaan bersifat edukasi dan referensi.</p>
+                        <p>DualCode tidak bertanggung jawab atas penyalahgunaan hasil pekerjaan oleh client. Hasil pekerjaan bersifat edukasi dan referensi.</p>
                     </section>
                 </div>
             </div>

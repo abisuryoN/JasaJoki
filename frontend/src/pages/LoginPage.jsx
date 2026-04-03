@@ -57,9 +57,9 @@ export default function LoginPage() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
-                        className="w-16 h-16 bg-gradient-to-tr from-blue-500 to-emerald-400 rounded-2xl mx-auto mb-6 shadow-lg shadow-blue-500/30 flex items-center justify-center transform -rotate-6"
+                        className="px-6 py-2 bg-gradient-to-tr from-blue-500 to-emerald-400 rounded-2xl mx-auto mb-6 shadow-lg shadow-blue-500/30 flex items-center justify-center transform -rotate-6 w-fit"
                     >
-                        <span className="text-white font-bold text-2xl tracking-tighter">JJ</span>
+                        <span className="text-white font-black text-2xl tracking-tighter">DualCode</span>
                     </motion.div>
                     <h2 className="text-3xl font-bold text-white mb-2">Selamat Datang</h2>
                     <p className="text-slate-400 text-sm">Masuk ke akun DualCode Anda</p>

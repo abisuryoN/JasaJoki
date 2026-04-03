@@ -66,7 +66,7 @@ export default function AdminLayout({ children }) {
             {/* Main Content */}
             <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
                 <header className="h-16 glass border-b border-slate-700/50 flex items-center justify-between px-6 md:hidden shrink-0">
-                    <Link to="/" className="text-lg font-bold heading-gradient">JasaJoki Admin</Link>
+                    <Link to="/" className="text-lg font-bold heading-gradient">DualCode Admin</Link>
                     <button onClick={logout} className="text-red-400 hover:text-red-300">
                         <FaSignOutAlt size={20} />
                     </button>

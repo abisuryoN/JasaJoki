@@ -73,9 +73,9 @@ export default function LandingPage() {
     return (
         <div className="bg-[#020617] text-slate-100 selection:bg-blue-500/30 overflow-x-hidden">
             <SEO 
-                title="Solusi Jasa Joki Web & Pengerjaan Project IT Terpercaya"
-                description="Jasa Joki Web, Pengerjaan Project IT, dan Tugas Pemrograman Terpercaya. Solusi cepat, berkualitas, dan transparan untuk mahasiswa dan startup. Konsultasi gratis!"
-                keywords="jasa joki web, jasa joki koding, pengerjaan tugas pemrograman, jasa pembuatan website, joki skripsi informatika, jasa koding mahasiswa, bantuan coding"
+                title="DualCode - Solusi Project IT & Software House Terpercaya"
+                description="DualCode - Solusi Jasa Pembuatan Web & Pengerjaan Project IT Terpercaya. Bantu tugas koding, website perusahaan, dan project startup dengan kualitas premium."
+                keywords="dualcode, jasa pembuatan website, pengerjaan tugas pemrograman, software house, jasa koding, bantuan project it"
             />
             {/* Hero Section */}
             <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">

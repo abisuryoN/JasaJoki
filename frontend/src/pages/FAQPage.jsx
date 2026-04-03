@@ -27,7 +27,7 @@ export default function FAQPage() {
         <div className="min-h-screen bg-[#020617] pt-32 pb-20 px-4">
             <SEO 
                 title="FAQ - Pertanyaan Seputar Jasa Joki Koding"
-                description="Temukan jawaban atas pertanyaan umum seputar layanan jasa joki web, sistem pembayaran, garansi revisi, dan cara pemesanan di JasaJoki."
+                description="Temukan jawaban atas pertanyaan umum seputar layanan jasa joki web, sistem pembayaran, garansi revisi, dan cara pemesanan di DualCode."
                 keywords="faq jasa joki, tanya jawab jasa coding, garansi joki web, sistem bayar joki"
                 canonicalUrl="/faq"
             />

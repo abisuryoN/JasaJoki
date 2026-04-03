@@ -9,4 +9,4 @@ Disallow: /register/
 Disallow: /payment/
 Disallow: /order/
 
-Sitemap: https://jasajoki.com/sitemap.xml
+Sitemap: https://dualcode.id/sitemap.xml

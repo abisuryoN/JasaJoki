@@ -27,8 +27,8 @@ return new class extends Migration
         $admin = User::where('username', 'admin')->orWhere('role', 'admin')->first();
         if (!$admin) {
             User::create([
-                'name' => 'Admin JasaJoki',
-                'email' => 'admin@jasajoki.com',
+                'name' => 'Admin DualCode',
+                'email' => 'admin@dualcode.id',
                 'username' => 'admin',
                 'password' => Hash::make('admin'),
                 'role' => 'admin',
