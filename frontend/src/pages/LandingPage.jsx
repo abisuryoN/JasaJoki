@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
@@ -10,11 +10,34 @@ import {
 } from 'react-icons/fa';
 import { SiPostgresql, SiMysql, SiMariadb, SiCodeigniter } from 'react-icons/si';
 import ReviewSection from '../components/ReviewSection';
+import JourneyFlow from '../components/JourneyFlow';
 import { generateWhatsAppUrl } from '../utils/whatsapp';
+import api from '../api';
 
 export default function LandingPage() {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [packages, setPackages] = useState([]);
+    const [portfolios, setPortfolios] = useState([]);
+    const [stats, setStats] = useState({ avg_rating: 0, total_reviews: 0 });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const pkgRes = await api.get('/packages');
+                if (pkgRes.data?.success) setPackages(pkgRes.data.data);
+
+                const revRes = await api.get('/reviews/stats');
+                if (revRes.data?.success) setStats(revRes.data);
+
+                const portRes = await api.get('/portfolios');
+                if (portRes.data?.success) setPortfolios(portRes.data.data);
+            } catch (err) {
+                console.error("Failed fetching landing data", err);
+            }
+        };
+        fetchData();
+    }, []);
 
     const technologies = [
         { name: 'React', icon: <FaReact size={40} className="text-[#61DAFB]" /> },
@@ -43,13 +66,7 @@ export default function LandingPage() {
         { title: 'Transparansi Progress', desc: 'Pantau perkembangan tugasmu secara real-time di dashboard.', icon: <FaRocket size={28} />, color: 'purple' },
     ];
 
-    const flowSteps = [
-        { title: 'Konsultasi', desc: 'Hubungi kami via WhatsApp atau Chat untuk mulai.', icon: <FaWhatsapp /> },
-        { title: 'Diskusi & Scope', desc: 'Tentukan detail project dan deadline yang diinginkan.', icon: <FaSearch /> },
-        { title: 'Deal Harga', desc: 'Kami berikan penawaran terbaik sesuai tingkat kesulitan.', icon: <FaHandshake /> },
-        { title: 'Pengerjaan', desc: 'Tim ahli kami mulai membangun solusi untuk Anda.', icon: <FaEdit /> },
-        { title: 'Revisi / Selesai', desc: 'Cek hasil akhir, revisi jika perlu, dan project selesai!', icon: <FaCheckDouble /> },
-    ];
+
 
     return (
         <div className="bg-[#020617] text-slate-100 selection:bg-blue-500/30 overflow-x-hidden">
@@ -90,19 +107,14 @@ export default function LandingPage() {
                         transition={{ delay: 0.3 }}
                         className="flex items-center justify-center gap-4 mb-8"
                     >
-                        <div className="flex -space-x-3">
-                            {[1, 2, 3, 4].map(i => (
-                                <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-900 bg-blue-600 flex items-center justify-center text-[10px] font-bold">
-                                    User
+                        {stats.total_reviews > 0 && (
+                            <div className="text-center">
+                                <div className="flex text-yellow-500 text-sm">
+                                    <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
                                 </div>
-                            ))}
-                        </div>
-                        <div className="text-left">
-                            <div className="flex text-yellow-500 text-sm">
-                                <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
+                                <p className="text-xs text-slate-400 font-bold">⭐ {stats.avg_rating}/5 dari {stats.total_reviews} Client Terbantu</p>
                             </div>
-                            <p className="text-xs text-slate-400 font-bold">⭐ 4.9/5 dari 120+ Client Terbantu</p>
-                        </div>
+                        )}
                     </motion.div>
 
                     <motion.p 
@@ -313,111 +325,57 @@ export default function LandingPage() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-                        {/* Student Pricing */}
-                        <div className="glass-morphism p-8 rounded-[40px] border border-white/5 hover:border-blue-500/30 transition-all group relative overflow-hidden flex flex-col h-full">
-                            <div className="absolute top-0 right-0 p-6 opacity-5">
-                                <FaGraduationCap size={60} />
-                            </div>
-                            <div className="mb-8">
-                                <h3 className="text-2xl font-black text-white mb-2">Mahasiswa</h3>
-                                <p className="text-slate-500 text-sm font-medium">Tugas coding, desain, atau skripsi IT.</p>
-                            </div>
-                            <div className="mb-8">
-                                <span className="text-slate-400 text-sm italic font-bold">Hemat Mulai Dari</span>
-                                <div className="text-5xl font-black text-white mt-1 tracking-tighter">200k</div>
-                            </div>
-                            <ul className="space-y-4 mb-10">
-                                <li className="flex items-center gap-3 text-slate-400 text-sm font-bold">
-                                    <FaCheckCircle className="text-blue-500" /> Revisi Sampai Approve
-                                </li>
-                                <li className="flex items-center gap-3 text-slate-400 text-sm font-bold">
-                                    <FaCheckCircle className="text-blue-500" /> Penjelasan Laporan / Dokumentasi
-                                </li>
-                                <li className="flex items-center gap-3 text-slate-400 text-sm font-bold">
-                                    <FaCheckCircle className="text-blue-500" /> Full Source Code & Database
-                                </li>
-                            </ul>
-                            <a 
-                                href={generateWhatsAppUrl(user, { manualMessage: 'Halo admin, saya ingin order paket Mahasiswa (Kebutuhan Kuliah).' })}
-                                target="_blank"
-                                className="mt-auto block w-full text-center py-5 bg-slate-800 text-white rounded-[20px] font-extrabold hover:bg-blue-600 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] transition-all"
-                            >
-                                Tanya Sekarang
-                            </a>
+                    {packages.length === 0 ? (
+                        <div className="text-center py-16 bg-slate-900/50 rounded-[32px] border border-white/5">
+                            <h3 className="text-2xl font-bold text-white mb-2">Belum ada paket layanan</h3>
+                            <p className="text-slate-400">Silakan hubungi admin untuk info lebih lanjut.</p>
                         </div>
-
-                        {/* Business Pricing */}
-                        <div className="glass-morphism p-10 rounded-[40px] border border-blue-500/40 bg-blue-500/5 hover:-translate-y-2 transition-all group relative overflow-hidden ring-4 ring-blue-500/10 shadow-[0_0_50px_rgba(59,130,246,0.1)] flex flex-col h-full scale-105 z-10">
-                            <div className="absolute top-0 right-0 p-1 bg-blue-500 text-[10px] font-black uppercase text-white px-6 py-1 rounded-bl-2xl">Recommended</div>
-                            <div className="absolute top-0 right-0 p-6 opacity-5">
-                                <FaBriefcase size={60} />
-                            </div>
-                            <div className="mb-8">
-                                <h3 className="text-2xl font-black text-white mb-2">Bisnis / Startup</h3>
-                                <p className="text-blue-400 text-xs font-black uppercase tracking-widest mb-4">Professional Choice</p>
-                                <p className="text-slate-300 text-sm font-medium">Sistem kustom, Web App, dan SaaS solution.</p>
-                            </div>
-                            <div className="mb-8">
-                                <span className="text-blue-400 text-sm font-black italic">Investasi Terbaik</span>
-                                <div className="text-4xl font-black text-white mt-1 tracking-tight">Custom Plan</div>
-                            </div>
-                            <ul className="space-y-4 mb-10">
-                                <li className="flex items-center gap-3 text-slate-200 text-sm font-bold">
-                                    <FaCheckCircle className="text-blue-500" /> Architecture Design & Scalability
-                                </li>
-                                <li className="flex items-center gap-3 text-slate-200 text-sm font-bold">
-                                    <FaCheckCircle className="text-blue-500" /> UI/UX Modern & Responsive
-                                </li>
-                                <li className="flex items-center gap-3 text-slate-200 text-sm font-bold">
-                                    <FaCheckCircle className="text-blue-500" /> Deployment & Cloud Setup
-                                </li>
-                                <li className="flex items-center gap-3 text-slate-200 text-sm font-bold">
-                                    <FaCheckCircle className="text-blue-500" /> Priority Support 24/7
-                                </li>
-                            </ul>
-                            <a 
-                                href={generateWhatsAppUrl(user, { manualMessage: 'Halo admin, saya ingin konsultasi project bisnis/startup (Professional Request).' })}
-                                target="_blank"
-                                className="mt-auto block w-full text-center py-6 bg-blue-600 text-white rounded-[20px] font-black text-lg hover:bg-blue-500 transition-all shadow-[0_15px_30px_rgba(59,130,246,0.4)]"
-                            >
-                                Dapatkan Penawaran
-                            </a>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+                            {packages.map((pkg) => (
+                                <div 
+                                    key={pkg.id} 
+                                    className={`glass-morphism p-8 rounded-[40px] border transition-all group relative overflow-hidden flex flex-col h-full ${
+                                        pkg.is_popular 
+                                        ? 'border-blue-500/40 bg-blue-500/5 hover:-translate-y-2 ring-4 ring-blue-500/10 shadow-[0_0_50px_rgba(59,130,246,0.1)] scale-105 z-10' 
+                                        : 'border-white/5 hover:border-blue-500/30'
+                                    }`}
+                                >
+                                    {pkg.is_popular && (
+                                        <div className="absolute top-0 right-0 p-1 bg-blue-500 text-[10px] font-black uppercase text-white px-6 py-1 rounded-bl-2xl">Recommended</div>
+                                    )}
+                                    <div className="mb-8">
+                                        <h3 className="text-2xl font-black text-white mb-2">{pkg.title}</h3>
+                                        <p className="text-slate-500 text-sm font-medium">{pkg.subtitle}</p>
+                                    </div>
+                                    <div className="mb-8">
+                                        <span className="text-slate-400 text-sm italic font-bold">
+                                            {pkg.price.toLowerCase().includes('custom') ? 'Investasi Terbaik' : 'Hemat Mulai Dari'}
+                                        </span>
+                                        <div className="text-5xl font-black text-white mt-1 tracking-tighter">{pkg.price}</div>
+                                    </div>
+                                    <ul className="space-y-4 mb-10">
+                                        {(pkg.features || []).map((feature, i) => (
+                                            <li key={i} className="flex items-center gap-3 text-slate-400 text-sm font-bold">
+                                                <FaCheckCircle className={pkg.is_popular ? "text-blue-500" : "text-emerald-500"} /> {feature}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <a 
+                                        href={generateWhatsAppUrl(user, { manualMessage: `Halo admin, saya tertarik dengan paket ${pkg.title}. Boleh minta info lebih detail?` })}
+                                        target="_blank"
+                                        className={`mt-auto block w-full text-center py-5 rounded-[20px] font-black transition-all ${
+                                            pkg.is_popular 
+                                            ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-[0_15px_30px_rgba(59,130,246,0.4)]'
+                                            : 'bg-slate-800 text-white hover:bg-blue-600 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]'
+                                        }`}
+                                    >
+                                        Pesan Sekarang
+                                    </a>
+                                </div>
+                            ))}
                         </div>
-
-                        {/* Free Consultation */}
-                        <div className="glass-morphism p-8 rounded-[40px] border border-white/5 hover:border-emerald-500/30 transition-all group relative overflow-hidden flex flex-col h-full">
-                            <div className="absolute top-0 right-0 p-6 opacity-5">
-                                <FaComments size={60} />
-                            </div>
-                            <div className="mb-8">
-                                <h3 className="text-2xl font-black text-white mb-2">Free Chat</h3>
-                                <p className="text-slate-500 text-sm font-medium italic">Belum punya konsep yang matang?</p>
-                            </div>
-                            <div className="mb-8">
-                                <span className="text-slate-400 text-sm italic font-bold">Investasi</span>
-                                <div className="text-5xl font-black text-emerald-500 mt-1 uppercase tracking-tighter">Rp 0</div>
-                            </div>
-                            <ul className="space-y-4 mb-10">
-                                <li className="flex items-center gap-3 text-slate-400 text-sm font-bold">
-                                    <FaCheckCircle className="text-emerald-500" /> Konsultasi Alur Program
-                                </li>
-                                <li className="flex items-center gap-3 text-slate-400 text-sm font-bold">
-                                    <FaCheckCircle className="text-emerald-500" /> Estimasi Durasi & Budget
-                                </li>
-                                <li className="flex items-center gap-3 text-slate-400 text-sm font-bold">
-                                    <FaCheckCircle className="text-emerald-500" /> Rekomendasi Fitur
-                                </li>
-                            </ul>
-                            <a 
-                                href={generateWhatsAppUrl(user, { manualMessage: 'Halo admin, saya mau tanya-tanya dulu (Konsultasi Gratis).' })}
-                                target="_blank"
-                                className="mt-auto block w-full text-center py-5 bg-slate-800 text-white rounded-[20px] font-bold hover:bg-emerald-600 hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all"
-                            >
-                                Mulai Tanya Dulu
-                            </a>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </section>
 
@@ -435,50 +393,72 @@ export default function LandingPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div className="group relative overflow-hidden rounded-[32px] aspect-[4/3] bg-slate-900 border border-white/5">
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent z-10 opacity-80" />
-                            <div className="absolute bottom-0 left-0 p-8 z-20 w-full translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                <div className="text-xs font-black text-blue-400 uppercase tracking-widest mb-2">Web Application</div>
-                                <h4 className="text-2xl font-black text-white mb-4">Sistem Management Inventaris</h4>
-                                <div className="flex gap-2">
-                                    <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] text-white font-bold">Laravel</span>
-                                    <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] text-white font-bold">React</span>
-                                </div>
+                    {portfolios.length === 0 ? (
+                        <div className="text-center py-20 bg-slate-900/50 rounded-[40px] border border-white/5 shadow-2xl glass-morphism">
+                            <div className="w-24 h-24 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <FaRocket size={40} />
                             </div>
-                            <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-40 transition-opacity">
-                                <FaDatabase size={120} className="text-blue-500" />
-                            </div>
+                            <h3 className="text-3xl lg:text-4xl font-black text-white mb-4">Siap Mengeksekusi Visi Anda</h3>
+                            <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+                                Dari Sistem Enterprise berskala besar, Aplikasi Mobile modern, hingga Web Platform custom. Kami memiliki pengalaman teknis untuk mewujudkan ide Anda menjadi sistem yang stabil dan siap pakai.
+                            </p>
+                            <button onClick={handleOrderClick} className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition shadow-[0_0_30px_rgba(59,130,246,0.3)]">
+                                Diskusikan Ide Project Anda
+                            </button>
                         </div>
-                        <div className="group relative overflow-hidden rounded-[32px] aspect-[4/3] bg-slate-900 border border-white/5">
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent z-10 opacity-80" />
-                            <div className="absolute bottom-0 left-0 p-8 z-20 w-full translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                <div className="text-xs font-black text-blue-400 uppercase tracking-widest mb-2">Portfolio Web</div>
-                                <h4 className="text-2xl font-black text-white mb-4">Personal Interactive Website</h4>
-                                <div className="flex gap-2">
-                                    <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] text-white font-bold">Three.js</span>
-                                    <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] text-white font-bold">Framer Motion</span>
-                                </div>
-                            </div>
-                            <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-40 transition-opacity">
-                                <FaReact size={120} className="text-blue-500" />
-                            </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {portfolios.map((item, i) => (
+                                <motion.div 
+                                    key={item.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="group relative overflow-hidden rounded-[32px] aspect-[4/3] bg-slate-900 border border-white/5 hover:border-blue-500/30 transition-all duration-500 hover:shadow-[0_20px_40px_rgba(30,58,138,0.3)]"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent z-10 opacity-90 transition-opacity" />
+                                    
+                                    {/* Icon / Image Placeholder */}
+                                    {item.image_url ? (
+                                        <div className="absolute inset-0 w-full h-full opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-110">
+                                            <img src={`http://localhost:8000/storage/${item.image_url}`} alt={item.title} className="w-full h-full object-cover" />
+                                        </div>
+                                    ) : (
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-40 transition-opacity group-hover:scale-110 duration-700">
+                                            {item.category.toLowerCase().includes('mobile') ? <FaReact size={120} className="text-blue-500" /> : <FaDatabase size={120} className="text-emerald-500" />}
+                                        </div>
+                                    )}
+
+                                    <div className="absolute bottom-0 left-0 p-8 z-20 w-full translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
+                                        <div className="flex justify-between items-end mb-3">
+                                            <div className="text-xs font-black text-blue-400 uppercase tracking-widest bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 inline-block">
+                                                {item.category}
+                                            </div>
+                                            {item.link && (
+                                                <a href={item.link} target="_blank" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-blue-500 transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 delay-100">
+                                                    <FaArrowRight />
+                                                </a>
+                                            )}
+                                        </div>
+                                        <h4 className="text-2xl font-black text-white mb-2 leading-tight">{item.title}</h4>
+                                        <p className="text-slate-400 text-sm mb-4 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity delay-75 duration-300">
+                                            {item.description}
+                                        </p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {(item.tech_stack || []).map((tech, idx) => (
+                                                <span key={idx} className="px-3 py-1 bg-slate-800/80 backdrop-blur-sm rounded-full text-[10px] text-slate-300 font-bold border border-white/5">
+                                                    {tech}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Hover overlay glow */}
+                                    <div className="absolute bottom-[-20%] right-[-20%] w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                </motion.div>
+                            ))}
                         </div>
-                        <div className="group relative overflow-hidden rounded-[32px] aspect-[4/3] bg-slate-900 border border-white/5">
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent z-10 opacity-80" />
-                            <div className="absolute bottom-0 left-0 p-8 z-20 w-full translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                <div className="text-xs font-black text-blue-400 uppercase tracking-widest mb-2">Mobile App</div>
-                                <h4 className="text-2xl font-black text-white mb-4">E-Commerce App Mockup</h4>
-                                <div className="flex gap-2">
-                                    <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] text-white font-bold">React Native</span>
-                                    <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] text-white font-bold">Firebase</span>
-                                </div>
-                            </div>
-                            <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-40 transition-opacity">
-                                <FaNodeJs size={120} className="text-blue-500" />
-                            </div>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </section>
 
@@ -605,40 +585,8 @@ export default function LandingPage() {
             </section>
 
 
-            {/* Flow Section */}
-            <section className="py-24 relative bg-slate-900/40">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="text-center mb-20 text-glow-blue">
-                        <h2 className="text-4xl md:text-5xl font-black mb-4">Gampang Banget!</h2>
-                        <p className="text-slate-400 text-lg uppercase tracking-[0.2em] font-bold">Flow Cara Kerja JasaJoki</p>
-                    </div>
-
-                    <div className="relative">
-                        {/* Connection Line */}
-                        <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent hidden lg:block translate-y-[-50px]" />
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                            {flowSteps.map((step, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                                    className="text-center relative z-10 group"
-                                >
-                                    <div className="w-20 h-20 bg-slate-800 rounded-full border-2 border-white/5 flex items-center justify-center mx-auto mb-6 text-2xl text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-400 transition-all duration-500 shadow-xl relative">
-                                        <div className="absolute -top-2 -left-2 w-8 h-8 bg-blue-500 text-white text-xs font-black rounded-full flex items-center justify-center">{i + 1}</div>
-                                        {step.icon}
-                                    </div>
-                                    <h4 className="text-xl font-black text-white mb-3 tracking-tight">{step.title}</h4>
-                                    <p className="text-slate-500 text-sm font-medium leading-relaxed">{step.desc}</p>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {/* Flow Section (Zigzag Component) */}
+            <JourneyFlow />
 
             {/* Testimonials */}
             <ReviewSection />

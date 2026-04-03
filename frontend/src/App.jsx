@@ -11,6 +11,8 @@ import PaymentForm from './pages/PaymentForm';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminOrders from './pages/AdminOrders';
 import AdminRevisions from './pages/AdminRevisions';
+import AdminPackages from './pages/AdminPackages';
+import AdminReviews from './pages/AdminReviews';
 import RevisionMenu from './pages/RevisionMenu';
 import AdminHelp from './pages/AdminHelp';
 import HelpPage from './pages/HelpPage';
@@ -101,6 +103,16 @@ export default function App() {
                 <Route path="/admin/revisions" element={
                     <ProtectedRoute adminOnly={true}>
                         <AdminLayout><AdminRevisions /></AdminLayout>
+                    </ProtectedRoute>
+                } />
+                <Route path="/admin/packages" element={
+                    <ProtectedRoute adminOnly={true}>
+                        <AdminLayout><AdminPackages /></AdminLayout>
+                    </ProtectedRoute>
+                } />
+                <Route path="/admin/reviews" element={
+                    <ProtectedRoute adminOnly={true}>
+                        <AdminLayout><AdminReviews /></AdminLayout>
                     </ProtectedRoute>
                 } />
                 <Route path="/admin/help" element={

@@ -18,7 +18,9 @@ export default function OrderForm() {
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [saveStatus, setSaveStatus] = useState('Tersimpan');
+    const [packages, setPackages] = useState([]);
     const [formData, setFormData] = useState({
+        package_id: '',
         title: '',
         description: '',
         deadline: '',
@@ -34,6 +36,7 @@ export default function OrderForm() {
                 const res = await api.get('/orders/draft');
                 if (res.data) {
                     setFormData({
+                        package_id: res.data.package_id || '',
                         title: res.data.title || '',
                         description: res.data.description || '',
                         deadline: res.data.deadline ? res.data.deadline.split(' ')[0] : '',
@@ -46,7 +49,18 @@ export default function OrderForm() {
                 console.error("Failed to fetch draft", err);
             }
         };
+        const fetchPackages = async () => {
+            try {
+                const res = await api.get('/packages');
+                if (res.data && res.data.success) {
+                    setPackages(res.data.data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch packages", err);
+            }
+        };
         fetchDraft();
+        fetchPackages();
     }, []);
 
     // Auto-save logic
@@ -119,8 +133,23 @@ export default function OrderForm() {
                         {step === 1 && (
                             <div className="space-y-6">
                                 <div>
+                                    <h2 className="text-2xl font-bold text-white mb-2">Pilih Paket Layanan</h2>
+                                    <p className="text-slate-400 text-sm mb-4">Pilih paket yang sesuai dengan kebutuhan Anda.</p>
+                                    <select 
+                                        name="package_id"
+                                        required
+                                        className="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-blue-500 outline-none transition text-white appearance-none mb-6"
+                                        value={formData.package_id}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">-- Pilih Paket --</option>
+                                        {packages.map(pkg => (
+                                            <option key={pkg.id} value={pkg.id}>{pkg.title} - {pkg.price}</option>
+                                        ))}
+                                    </select>
+
                                     <h2 className="text-2xl font-bold text-white mb-2">Apa yang bisa kami bantu?</h2>
-                                    <p className="text-slate-400 text-sm mb-6">Berikan judul singkat dan padat untuk tugas Anda.</p>
+                                    <p className="text-slate-400 text-sm mb-6">Berikan judul atau nama project singkat.</p>
                                     <input 
                                         type="text"
                                         name="title"

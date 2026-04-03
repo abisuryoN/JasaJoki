@@ -11,9 +11,19 @@ class Review extends Model
 
     protected $fillable = [
         'user_id',
+        'name',
         'rating',
         'comment',
+        'status',
     ];
+
+    /**
+     * Scope: only approved reviews (for public display)
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
 
     public function user()
     {

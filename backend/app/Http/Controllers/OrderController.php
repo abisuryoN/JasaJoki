@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Notifications\OrderNotification;
+use App\Services\WhatsAppService;
 
 class OrderController extends Controller
 {
@@ -22,11 +23,11 @@ class OrderController extends Controller
         $perPage = request('per_page', 10);
 
         if ($user->role === 'admin') {
-            $orders = Order::with('user', 'assignedTo')->latest()->paginate($perPage);
+            $orders = Order::with('user', 'assignedTo', 'payments')->latest()->paginate($perPage);
         } else {
             $orders = Order::where('user_id', $user->id)
                 ->where('status', '!=', 'draft')
-                ->with('assignedTo')
+                ->with('assignedTo', 'payments')
                 ->latest()
                 ->paginate($perPage);
         }
@@ -41,7 +42,7 @@ class OrderController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $order = Order::with(['user', 'assignedTo', 'revisions.user'])->findOrFail($id);
+        $order = Order::with(['user', 'assignedTo', 'revisions.user', 'payments', 'progress'])->findOrFail($id);
 
         if ($user->role !== 'admin' && $order->user_id !== $user->id) {
             return response()->json(['error' => 'Forbidden'], 403);
@@ -72,6 +73,7 @@ class OrderController extends Controller
         }
 
         $validated = $request->validate([
+            'package_id' => 'nullable|exists:packages,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'deadline' => 'nullable|date',
@@ -103,6 +105,15 @@ class OrderController extends Controller
                     'type' => 'order_new',
                 ]));
             }
+
+            // WhatsApp Gateway → notify admins
+            try {
+                $wa = new WhatsAppService();
+                $message = WhatsAppService::formatNewOrderMessage($order, $user);
+                $wa->notifyAdmins($message);
+            } catch (\Exception $e) {
+                Log::error('WhatsApp notification failed', ['error' => $e->getMessage()]);
+            }
         }
 
         return response()->json($order, 201);
@@ -122,10 +133,11 @@ class OrderController extends Controller
         }
 
         $validated = $request->validate([
+            'package_id' => 'nullable|exists:packages,id',
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'deadline' => 'nullable|date',
-            'status' => 'nullable|in:draft,pending,process,revision,done',
+            'status' => 'nullable|in:draft,pending,contacted,deal,progress,waiting_payment,revision,done',
             'guest_phone' => 'nullable|string|max:20',
             'guest_name' => 'nullable|string|max:255',
         ]);
@@ -135,6 +147,46 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'Order updated',
             'data' => $order,
+        ]);
+    }
+
+    /**
+     * Admin set harga untuk order.
+     * Auto-set status ke waiting_payment.
+     */
+    public function setPrice(Request $request, $id)
+    {
+        $user = Auth::guard('api')->user();
+        if ($user?->role !== 'admin') {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
+        $order = Order::findOrFail($id);
+
+        $request->validate([
+            'price' => 'required|numeric|min:1',
+            'price_note' => 'nullable|string|max:1000',
+        ]);
+
+        $order->update([
+            'price' => $request->price,
+            'price_note' => $request->price_note,
+            'status' => 'waiting_payment',
+        ]);
+
+        // Notify user
+        if ($order->user) {
+            $order->user->notify(new OrderNotification([
+                'title' => 'Harga Order Ditentukan!',
+                'message' => "Order #{$order->id} telah diberi harga Rp " . number_format($request->price, 0, ',', '.') . ". Silakan lakukan pembayaran.",
+                'url' => '/dashboard',
+                'type' => 'price_set',
+            ]));
+        }
+
+        return response()->json([
+            'message' => 'Harga berhasil ditentukan.',
+            'data' => $order->fresh(['payments', 'progress']),
         ]);
     }
 
@@ -148,27 +200,26 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         $validated = $request->validate([
-            'status' => 'required|in:pending,process,revision,done',
+            'status' => 'required|in:pending,contacted,deal,progress,waiting_payment,revision,done',
             'assigned_to' => 'nullable|exists:users,id',
         ]);
 
         $order->update($validated);
 
-        $order->user->notify(new OrderNotification([
-            'title' => 'Update Status Order',
-            'message' => "Order #{$order->id} Anda kini berstatus " . strtoupper($order->status),
-            'url' => '/dashboard',
-            'type' => 'order_status',
-        ]));
+        if ($order->user) {
+            $order->user->notify(new OrderNotification([
+                'title' => 'Update Status Order',
+                'message' => "Order #{$order->id} Anda kini berstatus " . strtoupper($order->status),
+                'url' => '/dashboard',
+                'type' => 'order_status',
+            ]));
+        }
 
         return response()->json($order);
     }
 
     /**
-     * ✅ FIXED: Upload bukti pembayaran
-     * - Pakai Auth::guard('api') konsisten
-     * - Hapus duplikasi dengan uploadPayment()
-     * - Validasi field lebih ketat
+     * Upload bukti pembayaran (legacy - kept for backward compatibility).
      */
     public function uploadPaymentProof(Request $request, $id)
     {
@@ -188,7 +239,6 @@ class OrderController extends Controller
             'payment_method' => 'required|string|max:50',
         ]);
 
-        // Hapus file lama jika ada
         if ($order->payment_proof && Storage::disk('public')->exists($order->payment_proof)) {
             Storage::disk('public')->delete($order->payment_proof);
         }
@@ -200,10 +250,6 @@ class OrderController extends Controller
             'payment_method' => $request->payment_method,
         ]);
 
-        // Broadcast realtime
-        broadcast(new \App\Events\OrderStatusUpdated($order))->toOthers();
-
-        // Notif ke semua admin
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(new OrderNotification([
@@ -221,10 +267,7 @@ class OrderController extends Controller
     }
 
     /**
-     * ✅ FIXED: Tampilkan bukti pembayaran
-     * - Pakai response()->file() bukan Storage::response() — lebih stabil
-     * - Deteksi mime type otomatis
-     * - Log jika file hilang di disk
+     * Tampilkan bukti pembayaran.
      */
     public function showPaymentProof($id)
     {

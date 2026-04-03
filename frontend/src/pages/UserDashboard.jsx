@@ -4,7 +4,8 @@ import api from '../api';
 import {
     FaFileDownload, FaClock, FaCheckCircle, FaTools,
     FaPen, FaHistory, FaPlus, FaCreditCard, FaStar,
-    FaRegCommentDots, FaChevronRight, FaWhatsapp
+    FaRegCommentDots, FaChevronRight, FaWhatsapp,
+    FaHandshake, FaMoneyBillWave, FaTag, FaPhoneAlt
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -78,7 +79,7 @@ export default function UserDashboard() {
         if (!revisionReason) return;
         setSubmitting(true);
         try {
-            await api.post(`/orders/${selectedOrder.id}/revision`, { reason: revisionReason });
+            await api.post(`/orders/${selectedOrder.id}/revision`, { revision_note: revisionReason });
             setShowRevisionModal(false);
             setRevisionReason('');
             fetchOrders();
@@ -92,7 +93,7 @@ export default function UserDashboard() {
     const handleRatingSubmit = async () => {
         setSubmitting(true);
         try {
-            await api.post(`/orders/${selectedOrder.id}/rate`, { rating, comment });
+            await api.post(`/orders/${selectedOrder.id}/rating`, { rating, comment });
             setShowRatingModal(false);
             setRating(5);
             setComment('');
@@ -104,19 +105,44 @@ export default function UserDashboard() {
         }
     };
 
+    const formatCurrency = (value) => {
+        if (!value && value !== 0) return '-';
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(value);
+    };
+
     const getStatusBadge = (status) => {
-        switch (status) {
-            case 'pending':
-                return <span className="px-3 py-1.5 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-black uppercase tracking-wider flex items-center gap-2"><FaClock size={10} /> Pending</span>;
-            case 'process':
-                return <span className="px-3 py-1.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-black uppercase tracking-wider flex items-center gap-2"><div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" /> Diproses</span>;
-            case 'revision':
-                return <span className="px-3 py-1.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[10px] font-black uppercase tracking-wider flex items-center gap-2"><FaPen size={10} /> Revisi</span>;
-            case 'done':
-                return <span className="px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black uppercase tracking-wider flex items-center gap-2"><FaCheckCircle size={10} /> Selesai</span>;
-            default:
-                return status;
+        const config = {
+            pending: { icon: <FaClock size={10} />, label: 'Pending', style: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
+            contacted: { icon: <FaPhoneAlt size={10} />, label: 'Dihubungi', style: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' },
+            deal: { icon: <FaHandshake size={10} />, label: 'Deal', style: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' },
+            progress: { icon: <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />, label: 'Dikerjakan', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+            waiting_payment: { icon: <FaMoneyBillWave size={10} />, label: 'Menunggu Bayar', style: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
+            revision: { icon: <FaPen size={10} />, label: 'Revisi', style: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
+            done: { icon: <FaCheckCircle size={10} />, label: 'Selesai', style: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+        };
+        const c = config[status] || { icon: null, label: status, style: 'bg-slate-500/10 text-slate-400 border-slate-500/20' };
+        return (
+            <span className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-2 border ${c.style}`}>
+                {c.icon} {c.label}
+            </span>
+        );
+    };
+
+    const getPaymentStatusInfo = (order) => {
+        if (!order.price) {
+            return { label: 'Menunggu Harga', color: 'text-slate-500', bg: 'bg-slate-800/50' };
         }
+        const map = {
+            paid: { label: '✅ Lunas', color: 'text-emerald-400', bg: 'bg-emerald-500/5' },
+            dp_paid: { label: '💰 DP Terbayar', color: 'text-blue-400', bg: 'bg-blue-500/5' },
+            partially_paid: { label: '💳 Cicilan', color: 'text-cyan-400', bg: 'bg-cyan-500/5' },
+            unpaid: { label: '⏳ Belum Bayar', color: 'text-orange-400', bg: 'bg-orange-500/5' },
+        };
+        return map[order.payment_status] || map.unpaid;
     };
 
     return (
@@ -131,7 +157,7 @@ export default function UserDashboard() {
                     </motion.div>
                     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-4">
                         <a 
-                            href={generateWhatsAppUrl(user)} 
+                            href={generateWhatsAppUrl(user || null)} 
                             target="_blank" 
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold transition shadow-lg shadow-emerald-500/20 active:scale-95"
@@ -182,77 +208,91 @@ export default function UserDashboard() {
                         ) : (
                             <>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {orders.map(order => (
-                                        <motion.div key={order.id} layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-dark p-8 rounded-[32px] border-slate-700/50 hover:border-blue-500/30 transition-all group relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                                                <FaClock size={80} />
-                                            </div>
-                                            <div className="flex justify-between items-start mb-6">
-                                                <div className="space-y-1">
-                                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Order ID #{order.id}</span>
-                                                    <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors leading-tight">{order.title}</h3>
+                                    {orders.map(order => {
+                                        const payInfo = getPaymentStatusInfo(order);
+                                        return (
+                                            <motion.div key={order.id} layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-dark p-8 rounded-[32px] border-slate-700/50 hover:border-blue-500/30 transition-all group relative overflow-hidden">
+                                                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                                                    <FaClock size={80} />
                                                 </div>
-                                                <div className="flex flex-col items-end gap-2">
-                                                    {getStatusBadge(order.status)}
-                                                    <button
-                                                        onClick={() => setViewingOrder(order)}
-                                                        className="text-[10px] font-bold text-blue-400 hover:text-blue-300 underline transition"
-                                                    >
-                                                        Lihat Detail
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <p className="text-sm text-slate-400 mb-8 line-clamp-3 leading-relaxed">{order.description}</p>
-                                            <div className="flex flex-wrap gap-3 mb-8">
-                                                <div className="bg-slate-900/50 p-4 rounded-2xl border border-slate-800/50 flex-1 min-w-[120px]">
-                                                    <span className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Revisi</span>
-                                                    <span className="text-sm font-bold text-white">{order.revisions_left} Sisa</span>
-                                                </div>
-                                                <div className="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10 flex-1 min-w-[120px] flex flex-col justify-between">
-                                                    <div>
-                                                        <span className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Bayar</span>
-                                                        <span className="text-sm font-bold text-blue-400">{order.payment_proof ? '✓ Lunas' : 'Menunggu'}</span>
+                                                <div className="flex justify-between items-start mb-6">
+                                                    <div className="space-y-1">
+                                                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Order ID #{order.id}</span>
+                                                        <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors leading-tight">{order.title}</h3>
                                                     </div>
-                                                    {order.payment_proof && (
+                                                    <div className="flex flex-col items-end gap-2">
+                                                        {getStatusBadge(order.status)}
                                                         <button
-                                                            onClick={() => {
-                                                                setPreviewFile({
-                                                                    url: `/orders/${order.id}/payment-proof`,
-                                                                    name: `Bukti Bayar Order #${order.id}`
-                                                                });
-                                                                setIsPreviewOpen(true);
-                                                            }}
-                                                            className="text-[9px] font-bold text-blue-500 hover:text-blue-300 transition mt-2 text-left underline"
+                                                            onClick={() => setViewingOrder(order)}
+                                                            className="text-[10px] font-bold text-blue-400 hover:text-blue-300 underline transition"
                                                         >
-                                                            Lihat Bukti
+                                                            Lihat Detail
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <p className="text-sm text-slate-400 mb-6 line-clamp-2 leading-relaxed">{order.description}</p>
+                                                
+                                                {/* Price & Payment Info */}
+                                                <div className="flex flex-wrap gap-3 mb-6">
+                                                    <div className="bg-slate-900/50 p-4 rounded-2xl border border-slate-800/50 flex-1 min-w-[120px]">
+                                                        <span className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Harga</span>
+                                                        {order.price ? (
+                                                            <span className="text-sm font-bold text-emerald-400">{formatCurrency(order.price)}</span>
+                                                        ) : (
+                                                            <span className="text-xs font-bold text-amber-400/60">Menunggu Penawaran</span>
+                                                        )}
+                                                    </div>
+                                                    <div className={`p-4 rounded-2xl border border-white/5 flex-1 min-w-[120px] ${payInfo.bg}`}>
+                                                        <span className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Pembayaran</span>
+                                                        <span className={`text-sm font-bold ${payInfo.color}`}>{payInfo.label}</span>
+                                                        {order.price && order.payment_status !== 'paid' && order.total_paid > 0 && (
+                                                            <div className="mt-2">
+                                                                <div className="w-full bg-slate-800/50 rounded-full h-1.5 overflow-hidden">
+                                                                    <div 
+                                                                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all"
+                                                                        style={{ width: `${Math.min(100, (order.total_paid / order.price) * 100)}%` }}
+                                                                    />
+                                                                </div>
+                                                                <span className="text-[9px] text-slate-500 font-bold mt-1 block">
+                                                                    {formatCurrency(order.total_paid)} / {formatCurrency(order.price)}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="bg-slate-900/50 p-4 rounded-2xl border border-slate-800/50 flex-1 min-w-[80px]">
+                                                        <span className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Revisi</span>
+                                                        <span className="text-sm font-bold text-white">{order.revisions_left} Sisa</span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex flex-col sm:flex-row gap-3 relative z-10">
+                                                    {order.result_path && (
+                                                        <button onClick={() => handleDownload(order.id)} className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-emerald-500/20 active:scale-95">
+                                                            <FaFileDownload /> Hasil
+                                                        </button>
+                                                    )}
+                                                    {order.status === 'waiting_payment' && order.price && order.payment_status !== 'paid' && (
+                                                        <button 
+                                                            onClick={() => setViewingOrder(order)}
+                                                            className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95"
+                                                        >
+                                                            <FaMoneyBillWave size={14} /> Bayar
+                                                        </button>
+                                                    )}
+                                                    {order.status === 'done' && order.revisions_left > 0 && !order.rating && (
+                                                        <button onClick={() => { setSelectedOrder(order); setShowRevisionModal(true); }} className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-xl transition">
+                                                            <FaPen size={12} /> Revisi
+                                                        </button>
+                                                    )}
+                                                    {order.status === 'done' && !order.rating && (
+                                                        <button onClick={() => { setSelectedOrder(order); setShowRatingModal(true); }} className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-blue-500/20">
+                                                            <FaStar size={14} /> Selesaikan
                                                         </button>
                                                     )}
                                                 </div>
-                                            </div>
-                                            <div className="flex flex-col sm:flex-row gap-3 relative z-10">
-                                                {order.result_path && (
-                                                    <button onClick={() => handleDownload(order.id)} className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-emerald-500/20 active:scale-95">
-                                                        <FaFileDownload /> Hasil
-                                                    </button>
-                                                )}
-                                                {!order.payment_proof && order.status !== 'done' && (
-                                                    <Link to={`/order/${order.id}/pay`} className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-xl transition border border-slate-700 active:scale-95">
-                                                        <FaCreditCard size={14} /> Bayar
-                                                    </Link>
-                                                )}
-                                                {order.status === 'done' && order.revisions_left > 0 && !order.rating && (
-                                                    <button onClick={() => { setSelectedOrder(order); setShowRevisionModal(true); }} className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-xl transition">
-                                                        <FaPen size={12} /> Revisi
-                                                    </button>
-                                                )}
-                                                {order.status === 'done' && !order.rating && (
-                                                    <button onClick={() => { setSelectedOrder(order); setShowRatingModal(true); }} className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-blue-500/20">
-                                                        <FaStar size={14} /> Selesaikan
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </motion.div>
-                                    ))}
+                                            </motion.div>
+                                        );
+                                    })}
                                 </div>
 
                                 {pagination.last_page > 1 && (
@@ -345,7 +385,7 @@ export default function UserDashboard() {
                 {viewingOrder && (
                     <OrderDetail
                         order={viewingOrder}
-                        onClose={() => setViewingOrder(null)}
+                        onClose={() => { setViewingOrder(null); fetchOrders(pagination.current_page); }}
                     />
                 )}
             </AnimatePresence>

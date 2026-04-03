@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-import { FaHome, FaClipboardList, FaSignOutAlt, FaPen, FaQuestionCircle } from 'react-icons/fa';
+import { FaHome, FaClipboardList, FaSignOutAlt, FaPen, FaQuestionCircle, FaStar } from 'react-icons/fa';
 
 export default function AdminLayout({ children }) {
     const { user, logout } = useAuth();
@@ -15,6 +15,8 @@ export default function AdminLayout({ children }) {
         { name: 'Dashboard', path: '/admin', icon: <FaHome /> },
         { name: 'Manajemen Order', path: '/admin/orders', icon: <FaClipboardList /> },
         { name: 'Manajemen Revisi', path: '/admin/revisions', icon: <FaPen /> },
+        { name: 'Paket Layanan', path: '/admin/packages', icon: <FaStar /> },
+        { name: 'Ulasan Publik', path: '/admin/reviews', icon: <FaStar /> },
         { name: 'Halaman Bantuan', path: '/admin/help', icon: <FaQuestionCircle /> },
     ];
 

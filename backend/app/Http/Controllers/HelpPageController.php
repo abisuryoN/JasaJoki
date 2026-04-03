@@ -25,17 +25,17 @@ class HelpPageController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'type' => 'required|in:faq,tc,contact',
         ]);
 
         $helpPage = HelpPage::create([
-            'title' => $request->title,
-            'slug' => Str::slug($request->title),
-            'content' => $request->content,
-            'type' => $request->type,
+            'title' => $validated['title'],
+            'slug' => Str::slug($validated['title']),
+            'content' => $validated['content'],
+            'type' => $validated['type'],
         ]);
 
         return response()->json($helpPage, 201);
@@ -48,17 +48,17 @@ class HelpPageController extends Controller
         }
 
         $helpPage = HelpPage::findOrFail($id);
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'content' => 'nullable|string',
             'type' => 'nullable|in:faq,tc,contact',
         ]);
 
-        if ($request->has('title')) {
-            $request->merge(['slug' => Str::slug($request->title)]);
+        if (isset($validated['title'])) {
+            $validated['slug'] = Str::slug($validated['title']);
         }
 
-        $helpPage->update($request->all());
+        $helpPage->update($validated);
 
         return response()->json($helpPage);
     }

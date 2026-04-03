@@ -41,4 +41,9 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'whatsapp' => [
+        'admin_numbers' => env('WHATSAPP_ADMIN_NUMBERS', '085719630624,085281156074'),
+        'fonnte_token' => env('WHATSAPP_FONNTE_TOKEN'),
+    ],
+
 ];
