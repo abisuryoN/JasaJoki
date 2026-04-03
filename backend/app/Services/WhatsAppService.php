@@ -119,15 +119,14 @@ class WhatsAppService
         $userName = $user?->name ?? $order->guest_name ?? 'Guest';
         $userContact = $user?->email ?? $order->guest_phone ?? '-';
         $deadline = $order->deadline ? date('d M Y', strtotime($order->deadline)) : 'Belum ditentukan';
-        $budget = $order->budget ? 'Rp ' . number_format($order->budget, 0, ',', '.') : 'Tidak disebutkan';
+        $layanan = $order->package ? $order->package->title : 'Custom/Tidak disebutkan';
 
         return "🔔 *ORDER BARU MASUK!*\n\n"
             . "📋 *Detail Order:*\n"
             . "• ID: #{$order->id}\n"
             . "• Judul: {$order->title}\n"
             . "• Deskripsi: " . \Illuminate\Support\Str::limit($order->description, 100) . "\n"
-            . "• Teknologi: " . ($order->technology ?: '-') . "\n"
-            . "• Budget: {$budget}\n"
+            . "• Layanan: {$layanan}\n"
             . "• Deadline: {$deadline}\n\n"
             . "👤 *Info Klien:*\n"
             . "• Nama: {$userName}\n"

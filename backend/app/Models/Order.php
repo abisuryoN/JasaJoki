@@ -45,6 +45,11 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
+
     public function assignedTo()
     {
         return $this->belongsTo(User::class, 'assigned_to');

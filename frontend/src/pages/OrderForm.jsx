@@ -66,19 +66,24 @@ export default function OrderForm() {
     // Auto-save logic
     const saveDraft = useCallback(
         debounce(async (data) => {
+            // Only save if we have minimum required fields
+            if (!data.title || !data.description) return;
             setSaveStatus('Menyimpan...');
             try {
-                await api.post('/orders', { ...data, status: 'draft' });
+                const payload = { ...data, status: 'draft' };
+                // Convert empty package_id to null
+                if (!payload.package_id) payload.package_id = null;
+                await api.post('/orders', payload);
                 setSaveStatus('Tersimpan');
             } catch (err) {
                 setSaveStatus('Gagal menyimpan');
             }
-        }, 1000),
+        }, 1500),
         []
     );
 
     useEffect(() => {
-        if (formData.title || formData.description) {
+        if (formData.title && formData.description) {
             saveDraft(formData);
         }
     }, [formData, saveDraft]);
@@ -92,7 +97,10 @@ export default function OrderForm() {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.post('/orders', { ...formData, status: 'pending' });
+            const payload = { ...formData, status: 'pending' };
+            // Convert empty package_id to null
+            if (!payload.package_id) payload.package_id = null;
+            await api.post('/orders', payload);
             navigate('/dashboard?status=success');
         } catch (err) {
             alert("Gagal mengirim order. Silakan coba lagi.");

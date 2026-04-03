@@ -224,7 +224,7 @@ export default function UserDashboard() {
                                                         {getStatusBadge(order.status)}
                                                         <button
                                                             onClick={() => setViewingOrder(order)}
-                                                            className="text-[10px] font-bold text-blue-400 hover:text-blue-300 underline transition"
+                                                            className="text-[10px] font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 px-3 py-1.5 rounded-lg border border-blue-500/20 transition"
                                                         >
                                                             Lihat Detail
                                                         </button>
@@ -271,7 +271,7 @@ export default function UserDashboard() {
                                                             <FaFileDownload /> Hasil
                                                         </button>
                                                     )}
-                                                    {order.status === 'waiting_payment' && order.price && order.payment_status !== 'paid' && (
+                                                    {order.price && order.payment_status !== 'paid' && (
                                                         <button 
                                                             onClick={() => setViewingOrder(order)}
                                                             className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95"
