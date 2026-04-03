@@ -20,7 +20,7 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto px-8">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     <div className="md:col-span-2">
-                        <h2 className="text-3xl font-black heading-gradient mb-4 tracking-tighter uppercase italic">JasaJoki</h2>
+                        <h2 className="text-3xl font-black heading-gradient mb-4 tracking-tighter uppercase italic">DualCode</h2>
                         <p className="text-slate-400 font-medium max-w-sm leading-relaxed mb-6">
                             Solusi tugas, coding, dan website premium untuk mahasiswa & startup. Bangun masa depan IT-mu bersama kami.
                         </p>
@@ -62,7 +62,7 @@ export default function Footer() {
 
                 <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em]">
-                        &copy; {new Date().getFullYear()} JasaJoki Platform. Premium Service for Better Future.
+                        &copy; {new Date().getFullYear()} DualCode Platform. Premium Service for Better Future.
                     </div>
                     <div className="flex gap-6">
                         <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest flex items-center gap-2">

@@ -20,8 +20,8 @@ export default function PaymentForm() {
     const [imgError, setImgError] = useState(false); // ✅ track image error
 
     const methods = [
-        { id: 'bca', name: 'BCA Transfer', icon: <FaUniversity />, account: '123-456-7890 a/n JasaJoki' },
-        { id: 'mandiri', name: 'Mandiri Transfer', icon: <FaUniversity />, account: '098-765-4321 a/n JasaJoki' },
+        { id: 'bca', name: 'BCA Transfer', icon: <FaUniversity />, account: '123-456-7890 a/n DualCode' },
+        { id: 'mandiri', name: 'Mandiri Transfer', icon: <FaUniversity />, account: '098-765-4321 a/n DualCode' },
         { id: 'gopay', name: 'GoPay', icon: <FaWallet />, account: '0812-3456-7890' },
         { id: 'dana', name: 'DANA', icon: <FaWallet />, account: '0812-3456-7890' },
     ];

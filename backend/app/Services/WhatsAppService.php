@@ -150,4 +150,19 @@ class WhatsAppService
             . "• Status: Menunggu Approval\n\n"
             . "⚡ Segera approve di dashboard admin!";
     }
+    /**
+     * Format new revision notification message.
+     */
+    public static function formatNewRevisionMessage(object $order, object $revision, ?object $user = null): string
+    {
+        $userName = $user?->name ?? $order->guest_name ?? 'Guest';
+        
+        return "🛠️ *REVISI BARU MASUK!*\n\n"
+            . "• Order: #{$order->id} - {$order->title}\n"
+            . "• Klien: {$userName}\n"
+            . "• Catatan Revisi:\n"
+            . "\"{$revision->description}\"\n\n"
+            . "⚡ Segera cek di dashboard admin!\n"
+            . "🔗 " . config('app.url') . "/admin/revisions";
+    }
 }

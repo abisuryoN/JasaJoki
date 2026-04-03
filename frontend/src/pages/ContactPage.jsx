@@ -34,7 +34,7 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <h4 className="text-white font-bold text-xl mb-1">Email</h4>
-                                    <p className="text-slate-400">support@jasajoki.com</p>
+                                    <p className="text-slate-400">support@dualcode.com</p>
                                 </div>
                             </div>
                         </div>

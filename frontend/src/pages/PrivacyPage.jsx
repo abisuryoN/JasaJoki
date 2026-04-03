@@ -14,7 +14,7 @@ export default function PrivacyPage() {
 
                     <section>
                         <h2 className="text-xl font-bold text-slate-200 mb-4 tracking-tight">2. Penggunaan Data</h2>
-                        <p>Data Anda hanya digunakan untuk kepentingan project dan komunikasi internal JasaJoki. Kami tidak menjual data Anda kepada pihak ketiga.</p>
+                        <p>Data Anda hanya digunakan untuk kepentingan project dan komunikasi internal DualCode. Kami tidak menjual data Anda kepada pihak ketiga.</p>
                     </section>
 
                     <section>

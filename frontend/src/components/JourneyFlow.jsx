@@ -26,7 +26,7 @@ export default function JourneyFlow() {
         <section ref={containerRef} className="py-32 relative bg-[#020617] overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 lg:px-8">
                 <div className="text-center mb-24 text-glow-blue relative z-10">
-                    <h2 className="text-4xl md:text-6xl font-black mb-6">Cara Kerja <span className="heading-gradient text-transparent bg-clip-text">JasaJoki</span></h2>
+                    <h2 className="text-4xl md:text-6xl font-black mb-6">Cara Kerja <span className="heading-gradient text-transparent bg-clip-text">DualCode</span></h2>
                     <p className="text-slate-400 text-lg md:text-xl uppercase tracking-[0.2em] font-bold">7 Langkah Menuju Kesuksesan Project Anda</p>
                 </div>
 

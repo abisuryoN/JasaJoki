@@ -7,6 +7,8 @@ use App\Models\Payment;
 use App\Models\User;
 use App\Notifications\OrderNotification;
 use App\Services\WhatsAppService;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -64,7 +66,7 @@ class PaymentController extends Controller
         }
 
         $request->validate([
-            'proof_image' => 'required|file|mimes:jpg,jpeg,png|max:5120',
+            'proof_image' => 'required|file|mimes:jpg,jpeg,png|max:2048',
             'amount' => 'required|numeric|min:1',
         ]);
 
@@ -109,14 +111,25 @@ class PaymentController extends Controller
             $amount = $remaining;
         }
 
-        // Store proof image
-        $path = $request->file('proof_image')->store('payment_proofs', 'public');
+        // Upload validation and status
+        $status = $user->role === 'admin' ? 'approved' : 'pending';
+
+        $file = $request->file('proof_image');
+        $fileName = 'payment_proof_' . uniqid() . '.jpg';
+        $path = 'payment_proofs/' . $fileName;
+
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($file->getRealPath());
+        $image->scaleDown(width: 1920);
+        $encoded = $image->toJpeg(75);
+        
+        Storage::disk('public')->put($path, $encoded->toString());
 
         $payment = Payment::create([
             'order_id' => $order->id,
             'amount' => $amount,
             'type' => $type,
-            'status' => 'pending',
+            'status' => $status,
             'proof_image' => $path,
         ]);
 

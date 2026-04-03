@@ -118,6 +118,12 @@ export default function OrderDetail({ order, onClose }) {
 
     const handlePaymentSubmit = async () => {
         if (!paymentFile || !paymentAmount) return;
+        
+        if (paymentFile.size > 2 * 1024 * 1024) {
+            alert('Ukuran gambar maksimal 2MB!');
+            return;
+        }
+
         setSubmittingPayment(true);
         try {
             const formData = new FormData();

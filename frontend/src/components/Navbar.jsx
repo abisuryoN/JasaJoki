@@ -43,7 +43,7 @@ export default function Navbar() {
         <nav className="glass sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
-                    <Link to="/" className="text-2xl font-bold heading-gradient">JasaJoki</Link>
+                    <Link to="/" className="text-2xl font-bold heading-gradient">DualCode</Link>
 
                     <div className="hidden md:flex items-center space-x-6">
                         <Link to="/" className="text-slate-300 hover:text-white transition">Beranda</Link>

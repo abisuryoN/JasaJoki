@@ -57,6 +57,10 @@ export default function ReviewSection() {
         return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
     };
 
+    if (!loading && reviews.length === 0) {
+        return null;
+    }
+
     return (
         <section className="py-24 relative overflow-hidden bg-slate-950/20">
             <div className="max-w-7xl mx-auto px-4">
@@ -152,7 +156,7 @@ export default function ReviewSection() {
                                 <div className="text-6xl mb-6">💡</div>
                                 <h3 className="text-3xl font-black text-white mb-4">Solusi Cerdas, Hasil Berkualitas</h3>
                                 <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8">
-                                    Setiap baris kode kami tulis dengan presisi dan standar enterprise. Tim JasaJoki berkomitmen penuh untuk menghadirkan sistem teknologi yang stabil guna mendukung target kesuksesan organisasi Anda.
+                                    Setiap baris kode kami tulis dengan presisi dan standar enterprise. Tim DualCode berkomitmen penuh untuk menghadirkan sistem teknologi yang stabil guna mendukung target kesuksesan organisasi Anda.
                                 </p>
                                 <button
                                     onClick={() => window.open('https://wa.me/6281234567890?text=Halo%20admin,%20saya%20ingin%20konsultasi%20project.', '_blank')}

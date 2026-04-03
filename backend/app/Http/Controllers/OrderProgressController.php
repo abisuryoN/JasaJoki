@@ -7,6 +7,8 @@ use App\Models\OrderProgress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class OrderProgressController extends Controller
 {
@@ -44,11 +46,21 @@ class OrderProgressController extends Controller
         $order = Order::findOrFail($orderId);
 
         $request->validate([
-            'image' => 'required|file|mimes:jpg,jpeg,png,gif,webp|max:10240',
+            'image' => 'required|file|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'description' => 'nullable|string|max:1000',
         ]);
 
-        $path = $request->file('image')->store('order_progress', 'public');
+        $file = $request->file('image');
+        $fileName = 'progress_' . uniqid() . '.jpg';
+        $path = 'order_progress/' . $fileName;
+
+        // Kompresi image max ~1MB (resize width 1920px max, quality 75)
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($file->getRealPath());
+        $image->scaleDown(width: 1920);
+        $encoded = $image->toJpeg(75);
+        
+        Storage::disk('public')->put($path, $encoded->toString());
 
         $progress = OrderProgress::create([
             'order_id' => $order->id,

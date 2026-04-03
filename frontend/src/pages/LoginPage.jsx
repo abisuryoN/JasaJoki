@@ -62,7 +62,7 @@ export default function LoginPage() {
                         <span className="text-white font-bold text-2xl tracking-tighter">JJ</span>
                     </motion.div>
                     <h2 className="text-3xl font-bold text-white mb-2">Selamat Datang</h2>
-                    <p className="text-slate-400 text-sm">Masuk ke akun JasaJoki Anda</p>
+                    <p className="text-slate-400 text-sm">Masuk ke akun DualCode Anda</p>
                 </div>
                 
                 {error && (

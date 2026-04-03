@@ -146,7 +146,7 @@ export default function FilePreviewModal({ isOpen, onClose, fileUrl, fileName })
 
                     {/* Footer / Info */}
                     <div className="p-4 text-center bg-black/20">
-                        <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] font-black">JasaJoki Secure Document Viewer</p>
+                        <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] font-black">DualCode Secure Document Viewer</p>
                     </div>
                 </motion.div>
             </div>

@@ -183,6 +183,12 @@ export default function AdminOrders() {
 
     const handleUploadProgress = async () => {
         if (!progressForm.image) return;
+        
+        if (progressForm.image.size > 2 * 1024 * 1024) {
+            alert('Ukuran gambar maksimal 2MB!');
+            return;
+        }
+
         setUploadingProgress(true);
         try {
             const formData = new FormData();

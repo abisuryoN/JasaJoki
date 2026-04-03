@@ -5,7 +5,7 @@ import { FaChevronDown, FaQuestionCircle } from 'react-icons/fa';
 export default function FAQPage() {
     const faqs = [
         {
-            q: "Bagaimana cara memesan jasa di JasaJoki?",
+            q: "Bagaimana cara memesan jasa di DualCode?",
             a: "Anda bisa memulai dengan melakukan Konsultasi Gratis via WhatsApp atau klik tombol 'Order Sekarang' di Landing Page. Kami akan mendiskusikan kebutuhan Anda sebelum menentukan harga."
         },
         {

@@ -356,6 +356,15 @@ class OrderController extends Controller
             'comment' => $request->comment,
         ]);
 
+        // Automatically create a review for the moderation system
+        \App\Models\Review::create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+            'status' => 'pending', // Needs admin approval to show on landing page
+        ]);
+
         return response()->json($order);
     }
 

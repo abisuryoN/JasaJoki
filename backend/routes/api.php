@@ -11,6 +11,7 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderProgressController;
+use App\Http\Controllers\AdminDashboardController;
 
 // ==========================================
 // AUTH
@@ -97,6 +98,9 @@ Route::get('portfolios', [PortfolioController::class, 'index']);
 // ADMIN ENDPOINTS (auth + admin check inside controllers)
 // ==========================================
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:api'], function () {
+    // Stats
+    Route::get('dashboard-stats', [AdminDashboardController::class, 'stats']);
+
     // Review moderation
     Route::get('reviews', [ReviewController::class, 'adminIndex']);
     Route::put('reviews/{id}/status', [ReviewController::class, 'updateStatus']);

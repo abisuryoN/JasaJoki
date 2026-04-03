@@ -10,7 +10,7 @@ export default function TermsPage() {
                 <div className="space-y-8 text-slate-400 leading-relaxed">
                     <section>
                         <h2 className="text-xl font-bold text-slate-200 mb-4 tracking-tight">1. Penerimaan Layanan</h2>
-                        <p>Dengan menggunakan layanan JasaJoki, Anda setuju untuk terikat oleh syarat dan ketentuan ini. Kami berhak melakukan perubahan sewaktu-waktu.</p>
+                        <p>Dengan menggunakan layanan DualCode, Anda setuju untuk terikat oleh syarat dan ketentuan ini. Kami berhak melakukan perubahan sewaktu-waktu.</p>
                     </section>
 
                     <section>

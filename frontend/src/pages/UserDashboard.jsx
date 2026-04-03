@@ -79,7 +79,7 @@ export default function UserDashboard() {
         if (!revisionReason) return;
         setSubmitting(true);
         try {
-            await api.post(`/orders/${selectedOrder.id}/revision`, { revision_note: revisionReason });
+            await api.post(`/revisions`, { order_id: selectedOrder.id, description: revisionReason });
             setShowRevisionModal(false);
             setRevisionReason('');
             fetchOrders();

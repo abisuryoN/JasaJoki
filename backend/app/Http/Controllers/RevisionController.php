@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Notifications\RevisionNotification;
+use App\Services\WhatsAppService;
+use Illuminate\Support\Facades\Log;
 
 class RevisionController extends Controller
 {
@@ -28,9 +30,9 @@ class RevisionController extends Controller
         $user = Auth::guard('api')->user();
         $request->validate([
             'order_id' => 'required|exists:orders,id',
-            'message' => 'required|string',
+            'description' => 'required|string',
             'deadline' => 'nullable|date',
-            'file' => 'nullable|file|max:5120',
+            'file' => 'nullable|file|max:2048',
         ]);
 
 
@@ -55,12 +57,11 @@ class RevisionController extends Controller
         $revision = Revision::create([
             'order_id' => $order->id,
             'user_id' => $user->id,
-            'message' => $request->message,
+            'description' => $request->description,
             'deadline' => $request->deadline,
             'file_path' => $filePath,
             'status' => 'pending',
         ]);
-
 
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
@@ -70,6 +71,15 @@ class RevisionController extends Controller
                 'url' => "/admin/revisions",
                 'type' => 'revision_new'
             ]));
+        }
+
+        // WhatsApp Gateway -> notify admins
+        try {
+            $wa = new WhatsAppService();
+            $waMessage = WhatsAppService::formatNewRevisionMessage($order, $revision, $user);
+            $wa->notifyAdmins($waMessage);
+        } catch (\Exception $e) {
+            Log::error('WhatsApp revision notification failed', ['error' => $e->getMessage()]);
         }
 
         return response()->json($revision, 201);
@@ -84,19 +94,23 @@ class RevisionController extends Controller
 
         $revision = Revision::findOrFail($id);
         $request->validate([
-            'status' => 'required|in:pending,approved,rejected,done',
+            'status' => 'required|in:pending,process,done',
         ]);
 
 
         $revision->update(['status' => $request->status]);
 
         if ($request->status === 'done') {
-            $revision->order->user->notify(new RevisionNotification([
-                'title' => 'Revisi Selesai!',
-                'message' => "Revisi untuk Order #{$revision->order_id} telah diselesaikan.",
-                'url' => "/dashboard",
-                'type' => 'revision_done'
-            ]));
+            $revision->order->update(['status' => 'done']);
+
+            if($revision->order->user) {
+                $revision->order->user->notify(new RevisionNotification([
+                    'title' => 'Revisi Selesai!',
+                    'message' => "Revisi untuk Order #{$revision->order_id} telah diselesaikan.",
+                    'url' => "/dashboard",
+                    'type' => 'revision_done'
+                ]));
+            }
         }
 
         return response()->json($revision);

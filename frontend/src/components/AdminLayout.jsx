@@ -25,7 +25,7 @@ export default function AdminLayout({ children }) {
             {/* Sidebar */}
             <aside className="w-64 glass border-r border-slate-700/50 hidden md:flex flex-col z-20">
                 <div className="h-16 flex items-center justify-center border-b border-slate-700/50 shrink-0">
-                    <Link to="/" className="text-xl font-bold heading-gradient">JasaJoki Admin</Link>
+                    <Link to="/" className="text-xl font-bold heading-gradient">DualCode Admin</Link>
                 </div>
                 
                 <div className="flex-1 p-4 space-y-2 overflow-y-auto">

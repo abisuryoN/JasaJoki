@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-import { 
-    FaArrowRight, FaRocket, FaClock, FaCheckCircle, FaComments, 
+import {
+    FaArrowRight, FaRocket, FaClock, FaCheckCircle, FaComments,
     FaSearch, FaHandshake, FaEdit, FaCheckDouble, FaWhatsapp,
     FaReact, FaLaravel, FaNodeJs, FaPython, FaDatabase, FaVuejs,
-    FaGraduationCap, FaShieldAlt, FaUndo, FaHeadset, FaBriefcase, FaStar
+    FaGraduationCap, FaShieldAlt, FaUndo, FaHeadset, FaBriefcase, FaStar,
+    FaCode
 } from 'react-icons/fa';
 import { SiPostgresql, SiMysql, SiMariadb, SiCodeigniter } from 'react-icons/si';
 import ReviewSection from '../components/ReviewSection';
@@ -77,7 +78,7 @@ export default function LandingPage() {
                     <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] animate-pulse-glow" />
                     <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-cyan-600/10 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: '2s' }} />
                 </div>
-                
+
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-[-5vh]">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -91,7 +92,7 @@ export default function LandingPage() {
                         <span>Expert IT Assistance is Here</span>
                     </motion.div>
 
-                    <motion.h1 
+                    <motion.h1
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
@@ -117,24 +118,24 @@ export default function LandingPage() {
                         )}
                     </motion.div>
 
-                    <motion.p 
+                    <motion.p
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="text-lg md:text-2xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed font-medium"
                     >
-                        Dari tugas kuliah sampai project startup, semua bisa kami bantu dengan sistem konsultasi dulu — bayar setelah deal. 
+                        Dari tugas kuliah sampai project startup, semua bisa kami bantu dengan sistem konsultasi dulu — bayar setelah deal.
                         <span className="text-blue-400 block mt-2 font-bold italic">⚠️ Slot terbatas hari ini!</span>
                     </motion.p>
 
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="flex flex-col sm:flex-row items-center justify-center gap-6"
                     >
-                        <a 
-                            href={generateWhatsAppUrl(user, { manualMessage: 'Halo admin, saya butuh cepat! Apakah slot masih ada? Saya ingin konsultasi project.' })} 
+                        <a
+                            href={generateWhatsAppUrl(user, { manualMessage: 'Halo admin, saya butuh cepat! Apakah slot masih ada? Saya ingin konsultasi project.' })}
                             target="_blank"
                             className="w-full sm:w-auto group relative px-10 py-5 rounded-2xl bg-blue-600 text-white font-black text-xl hover:bg-blue-500 transition-all shadow-[0_0_40px_rgba(59,130,246,0.4)] flex items-center justify-center gap-3 active:scale-95 overflow-hidden"
                         >
@@ -143,7 +144,7 @@ export default function LandingPage() {
                             </span>
                             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                         </a>
-                        <button 
+                        <button
                             onClick={handleOrderClick}
                             className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-slate-800/50 backdrop-blur-xl text-white font-bold text-xl hover:bg-slate-700/80 transition border border-white/10 flex items-center justify-center gap-3 active:scale-95"
                         >
@@ -188,7 +189,7 @@ export default function LandingPage() {
                     <div className="glass-morphism rounded-[64px] p-8 md:p-20 border border-blue-500/20 bg-gradient-to-br from-blue-600/10 via-slate-900/50 to-transparent relative overflow-hidden">
                         {/* Background Decor */}
                         <div className="absolute top-[-20%] right-[-10%] w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px]" />
-                        
+
                         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                             <div>
                                 <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-blue-500/20 text-blue-400 text-xs font-black uppercase tracking-[0.2em] mb-8 animate-pulse">
@@ -215,9 +216,9 @@ export default function LandingPage() {
                                         Kualitas Premium & Original
                                     </li>
                                 </ul>
-                                
+
                                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                                    <a 
+                                    <a
                                         href={generateWhatsAppUrl(user, { manualMessage: 'Halo admin, saya mahasiswa dan ingin klaim harga khusus mahasiswa.\n\nBerikut data saya:\n* Nama:\n* Universitas:\n* NIM:\n* Kebutuhan:\n* Deadline:' })}
                                         target="_blank"
                                         className="inline-flex items-center gap-4 px-10 py-5 bg-white text-blue-600 rounded-[28px] font-black text-xl hover:bg-blue-50 transition-all shadow-2xl shadow-white/10"
@@ -225,7 +226,7 @@ export default function LandingPage() {
                                         🚀 Klaim Harga Mahasiswa <FaArrowRight />
                                     </a>
                                 </motion.div>
-                                
+
                                 <p className="mt-6 text-sm text-slate-500 font-bold italic flex items-center gap-2">
                                     <FaCheckCircle className="text-blue-500/50" /> *Cukup tunjukkan NIM atau Kartu Mahasiswa aktif
                                 </p>
@@ -233,14 +234,14 @@ export default function LandingPage() {
 
                             <div className="relative group perspective-1000">
                                 {/* Student Card Mockup */}
-                                <motion.div 
+                                <motion.div
                                     initial={{ rotateY: 5, rotateX: 5 }}
                                     whileHover={{ rotateY: 0, rotateX: 0 }}
                                     className="relative z-10 glass-morphism p-10 rounded-[48px] border border-white/10 shadow-[0_50px_100px_rgba(30,58,138,0.3)] bg-slate-900/80 backdrop-blur-3xl overflow-hidden transition-all duration-700 select-none"
                                 >
                                     {/* Card Design Elements */}
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-bl-full border-l border-b border-white/5" />
-                                    
+
                                     <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-10">
                                         {/* Profile Photo */}
                                         <div className="relative">
@@ -302,7 +303,7 @@ export default function LandingPage() {
 
                                 {/* Decorative Background Glow */}
                                 <div className="absolute inset-0 bg-blue-600/10 blur-[120px] rounded-full translate-x-12 translate-y-12 -z-10" />
-                                
+
                                 <div className="absolute -top-8 -right-8 glass-morphism p-6 rounded-full border border-white/10 shadow-2xl z-20 hidden md:block group-hover:scale-110 transition-transform duration-500">
                                     <div className="text-blue-500">
                                         <FaStar size={24} />
@@ -333,13 +334,12 @@ export default function LandingPage() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
                             {packages.map((pkg) => (
-                                <div 
-                                    key={pkg.id} 
-                                    className={`glass-morphism p-8 rounded-[40px] border transition-all group relative overflow-hidden flex flex-col h-full ${
-                                        pkg.is_popular 
-                                        ? 'border-blue-500/40 bg-blue-500/5 hover:-translate-y-2 ring-4 ring-blue-500/10 shadow-[0_0_50px_rgba(59,130,246,0.1)] scale-105 z-10' 
+                                <div
+                                    key={pkg.id}
+                                    className={`glass-morphism p-8 rounded-[40px] border transition-all group relative overflow-hidden flex flex-col h-full ${pkg.is_popular
+                                        ? 'border-blue-500/40 bg-blue-500/5 hover:-translate-y-2 ring-4 ring-blue-500/10 shadow-[0_0_50px_rgba(59,130,246,0.1)] scale-105 z-10'
                                         : 'border-white/5 hover:border-blue-500/30'
-                                    }`}
+                                        }`}
                                 >
                                     {pkg.is_popular && (
                                         <div className="absolute top-0 right-0 p-1 bg-blue-500 text-[10px] font-black uppercase text-white px-6 py-1 rounded-bl-2xl">Recommended</div>
@@ -361,14 +361,13 @@ export default function LandingPage() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <a 
+                                    <a
                                         href={generateWhatsAppUrl(user, { manualMessage: `Halo admin, saya tertarik dengan paket ${pkg.title}. Boleh minta info lebih detail?` })}
                                         target="_blank"
-                                        className={`mt-auto block w-full text-center py-5 rounded-[20px] font-black transition-all ${
-                                            pkg.is_popular 
+                                        className={`mt-auto block w-full text-center py-5 rounded-[20px] font-black transition-all ${pkg.is_popular
                                             ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-[0_15px_30px_rgba(59,130,246,0.4)]'
                                             : 'bg-slate-800 text-white hover:bg-blue-600 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]'
-                                        }`}
+                                            }`}
                                     >
                                         Pesan Sekarang
                                     </a>
@@ -382,34 +381,93 @@ export default function LandingPage() {
             {/* Portfolio Section */}
             <section className="py-24 relative">
                 <div className="max-w-7xl mx-auto px-4">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                        <div className="max-w-2xl">
-                            <h2 className="text-4xl md:text-5xl font-black mb-4 text-white">Project Telah <span className="text-blue-500">Selesai</span></h2>
-                            <p className="text-slate-400 text-lg font-medium italic">Bukti nyata kualitas kami. Bukan sekadar janji manis.</p>
+                    <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
+                        <div className="max-w-3xl">
+                            <h2 className="text-4xl md:text-6xl font-black mb-6 text-white tracking-tighter">
+                                Mengenal Lebih Dekat <br />
+                                <span className="heading-gradient">DualCode</span>
+                            </h2>
+                            <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed">
+                                DualCode bukanlah sekadar penyedia jasa koding biasa. Kami adalah partner strategis yang lahir dari kolaborasi antara <span className="text-white font-bold">Desain Kreatif</span> dan <span className="text-white font-bold">Arsitektur Teknis</span> yang solid. Kami hadir untuk memutus rantai drama project IT yang lambat dan penuh bug, menggantinya dengan eksekusi presisi yang siap meningkatkan skala bisnis Anda.
+                            </p>
                         </div>
-                        <div className="text-right">
-                            <div className="text-3xl font-black text-white uppercase tracking-tighter mb-1">100+ Project</div>
-                            <div className="h-1.5 w-full bg-blue-600 rounded-full" />
+                        <div className="hidden lg:block w-32 h-32 rounded-full border-2 border-blue-500/20 flex items-center justify-center p-4">
+                            <div className="w-full h-full rounded-full bg-blue-600/10 flex items-center justify-center animate-pulse-glow">
+                                <FaRocket size={40} className="text-blue-500" />
+                            </div>
                         </div>
                     </div>
 
                     {portfolios.length === 0 ? (
-                        <div className="text-center py-20 bg-slate-900/50 rounded-[40px] border border-white/5 shadow-2xl glass-morphism">
-                            <div className="w-24 h-24 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <FaRocket size={40} />
+                        <div className="relative group perspective-1000">
+                            {/* Founders Section replacement for empty portfolio */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* Founder: Abi (Growth & Strategy now) */}
+                                <motion.div
+                                    whileHover={{ y: -10 }}
+                                    className="glass-morphism p-10 rounded-[48px] border border-white/10 bg-slate-900/60 backdrop-blur-3xl relative overflow-hidden flex flex-col items-center text-center group"
+                                >
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-bl-full blur-2xl" />
+                                    <div className="w-40 h-40 rounded-full bg-gradient-to-tr from-blue-600/20 to-indigo-600/20 p-1 mb-8 shadow-2xl relative flex items-center justify-center">
+                                        <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden border-4 border-slate-900 relative">
+                                            <img
+                                                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20in%20Tuxedo.png"
+                                                alt="Abi"
+                                                className="w-32 h-32 object-contain"
+                                            />
+                                        </div>
+                                        <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-blue-500 rounded-full border-4 border-slate-900 flex items-center justify-center text-white shadow-xl">
+                                            <FaRocket size={20} />
+                                        </div>
+                                    </div>
+                                    <h3 className="text-3xl font-black text-white mb-2 leading-tight">Abi</h3>
+                                    <p className="text-blue-400 font-bold uppercase tracking-widest text-[10px] mb-6 px-4 py-1 bg-blue-500/10 rounded-full border border-blue-500/20 inline-block">Co-Founder & Growth Lead</p>
+                                    <p className="text-slate-400 font-medium leading-relaxed max-w-sm text-sm">
+                                        Abi adalah otak di balik strategi dan keberhasilan setiap project. Ia memastikan setiap solusi yang DualCode berikan memiliki nilai bisnis yang nyata dan berkelanjutan bagi client.
+                                    </p>
+                                </motion.div>
+
+                                {/* Founder: Genes (Technical Lead now) */}
+                                <motion.div
+                                    whileHover={{ y: -10 }}
+                                    className="glass-morphism p-10 rounded-[48px] border border-white/10 bg-slate-900/60 backdrop-blur-3xl relative overflow-hidden flex flex-col items-center text-center group"
+                                >
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-600/10 rounded-bl-full blur-2xl" />
+                                    <div className="w-40 h-40 rounded-full bg-gradient-to-tr from-emerald-600/20 to-teal-600/20 p-1 mb-8 shadow-2xl relative flex items-center justify-center">
+                                        <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden border-4 border-slate-900 relative">
+                                            <img
+                                                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People%20with%20professions/Man%20Technologist%20Medium-Light%20Skin%20Tone.png"
+                                                alt="Genes"
+                                                className="w-32 h-32 object-contain"
+                                            />
+                                        </div>
+                                        <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-emerald-500 rounded-full border-4 border-slate-900 flex items-center justify-center text-white shadow-xl">
+                                            <FaCode size={20} />
+                                        </div>
+                                    </div>
+                                    <h3 className="text-3xl font-black text-white mb-2 leading-tight">Genes</h3>
+                                    <p className="text-emerald-400 font-bold uppercase tracking-widest text-[10px] mb-6 px-4 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 inline-block">Co-Founder & Technical Lead</p>
+                                    <p className="text-slate-400 font-medium leading-relaxed max-w-sm text-sm">
+                                        Genes bertanggung jawab penuh atas setiap baris kode yang lahir dari DualCode. Ia memastikan arsitektur sistem yang dibangun stabil, aman, dan menggunakan teknologi paling mutakhir.
+                                    </p>
+                                </motion.div>
                             </div>
-                            <h3 className="text-3xl lg:text-4xl font-black text-white mb-4">Siap Mengeksekusi Visi Anda</h3>
-                            <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-                                Dari Sistem Enterprise berskala besar, Aplikasi Mobile modern, hingga Web Platform custom. Kami memiliki pengalaman teknis untuk mewujudkan ide Anda menjadi sistem yang stabil dan siap pakai.
-                            </p>
-                            <button onClick={handleOrderClick} className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition shadow-[0_0_30px_rgba(59,130,246,0.3)]">
-                                Diskusikan Ide Project Anda
-                            </button>
+
+                            {/* Call to action center snippet */}
+                            <div className="mt-16 text-center max-w-2xl mx-auto">
+                                <h4 className="text-2xl font-black text-white mb-4">Kenapa Mempercayakan Project Anda pada Kami?</h4>
+                                <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8">
+                                    Kami memulai DualCode karena bosan melihat project IT yang berakhir dengan kekecewaan. Kami percaya bahwa setiap ide besar berhak mendapatkan eksekusi koding yang jujur, transparan, dan berkualitas tinggi.
+                                </p>
+                                <button onClick={handleOrderClick} className="px-10 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-3xl font-black text-xl transition shadow-[0_20px_50px_rgba(59,130,246,0.3)] active:scale-95 flex items-center justify-center gap-3 mx-auto">
+                                    🤝 Mulai Konsultasi dengan Kami
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {portfolios.map((item, i) => (
-                                <motion.div 
+                                <motion.div
                                     key={item.id}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
@@ -417,7 +475,7 @@ export default function LandingPage() {
                                     className="group relative overflow-hidden rounded-[32px] aspect-[4/3] bg-slate-900 border border-white/5 hover:border-blue-500/30 transition-all duration-500 hover:shadow-[0_20px_40px_rgba(30,58,138,0.3)]"
                                 >
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent z-10 opacity-90 transition-opacity" />
-                                    
+
                                     {/* Icon / Image Placeholder */}
                                     {item.image_url ? (
                                         <div className="absolute inset-0 w-full h-full opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-110">
@@ -452,7 +510,7 @@ export default function LandingPage() {
                                             ))}
                                         </div>
                                     </div>
-                                    
+
                                     {/* Hover overlay glow */}
                                     <div className="absolute bottom-[-20%] right-[-20%] w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                                 </motion.div>
@@ -524,7 +582,7 @@ export default function LandingPage() {
                                         <span className="text-blue-400">Sisa 1 Slot Hari Ini</span>
                                     </div>
                                 </div>
-                                <a 
+                                <a
                                     href={generateWhatsAppUrl(user, { manualMessage: 'BUTUH CEPAT! Halo admin, apakah slot project untuk hari ini masih tersedia? Saya punya deadline mepet.' })}
                                     target="_blank"
                                     className="block w-full text-center py-6 bg-blue-600 hover:bg-blue-500 text-white rounded-3xl font-black text-2xl transition shadow-[0_0_50px_rgba(59,130,246,0.5)] active:scale-95 flex items-center justify-center gap-4"
@@ -589,7 +647,7 @@ export default function LandingPage() {
             <JourneyFlow />
 
             {/* Testimonials */}
-            <ReviewSection />
+            {stats.total_reviews > 0 && <ReviewSection />}
 
             {/* Final CTA */}
             <section className="py-32 relative overflow-hidden text-center px-4">
@@ -608,14 +666,14 @@ export default function LandingPage() {
                         Jangan biarkan tugas atau project startup-mu mangkrak. Tim ahli kami siap bantu 24/7 dengan jaminan kualitas terbaik.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                        <a 
-                            href={generateWhatsAppUrl(user, { manualMessage: 'Halo admin, saya tertarik dengan jasa Anda. Saya butuh bantuan project [Sebutkan Jenis] dengan deadline [Sebutkan Tanggal]. Apakah bisa dibantu?' })} 
+                        <a
+                            href={generateWhatsAppUrl(user, { manualMessage: 'Halo admin, saya tertarik dengan jasa Anda. Saya butuh bantuan project [Sebutkan Jenis] dengan deadline [Sebutkan Tanggal]. Apakah bisa dibantu?' })}
                             target="_blank"
                             className="w-full sm:w-auto px-12 py-6 bg-emerald-500 hover:bg-emerald-400 text-white rounded-3xl font-black text-2xl transition shadow-[0_0_50px_rgba(16,185,129,0.4)] active:scale-95 flex items-center justify-center gap-4"
                         >
                             <FaWhatsapp size={32} /> Tanya Sekarang
                         </a>
-                        <button 
+                        <button
                             onClick={handleOrderClick}
                             className="w-full sm:w-auto px-12 py-6 bg-blue-600 hover:bg-blue-500 text-white rounded-3xl font-black text-2xl transition shadow-[0_0_50px_rgba(59,130,246,0.3)] active:scale-95"
                         >
