@@ -90,7 +90,7 @@ class WhatsAppService
     public static function formatNewOrderMessage(object $order, ?object $user = null): string
     {
         $userName = $user?->name ?? $order->guest_name ?? 'Guest';
-        $userContact = $user?->email ?? $order->guest_phone ?? '-';
+        $userContact = $order->guest_phone ?? $user?->email ?? '-';
         $deadline = $order->deadline ? date('d M Y', strtotime($order->deadline)) : 'Belum ditentukan';
         $layanan = $order->package ? $order->package->title : 'Custom/Tidak disebutkan';
 
