@@ -5,7 +5,7 @@
         "buildCommand": ""
     },
     "deploy": {
-        "startCommand": "cd backend && php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=$PORT",
+        "startCommand": "cd backend && php artisan migrate --force && php artisan db:seed --force && php artisan tinker --execute=\"App\\\\Models\\\\User::where('email','admin@dualcode.id')->update(['password'=>bcrypt('admin123')])\" && php artisan serve --host=0.0.0.0 --port=$PORT",
         "restartPolicyType": "ON_FAILURE"
     }
 }
