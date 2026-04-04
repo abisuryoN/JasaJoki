@@ -29,31 +29,30 @@ export default function LoginPage() {
     };
 
     const handleGoogleLogin = () => {
-        window.location.href = 'http://localhost:8000/api/auth/google';
+        window.location.href = 'https://generous-encouragement-production.up.railway.app/api/auth/google';
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4 relative overflow-hidden">
-            {/* Animated Background Gradients */}
-            <motion.div 
+            <motion.div
                 animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[120px]" 
+                className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[120px]"
             />
-            <motion.div 
+            <motion.div
                 animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
                 transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-600/20 rounded-full blur-[120px]" 
+                className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-600/20 rounded-full blur-[120px]"
             />
 
-            <motion.div 
+            <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="glass max-w-md w-full p-10 rounded-3xl relative z-10 border border-slate-700/50 shadow-2xl"
             >
                 <div className="text-center mb-10">
-                    <motion.div 
+                    <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
@@ -64,9 +63,9 @@ export default function LoginPage() {
                     <h2 className="text-3xl font-bold text-white mb-2">Selamat Datang</h2>
                     <p className="text-slate-400 text-sm">Masuk ke akun DualCode Anda</p>
                 </div>
-                
+
                 {error && (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm text-center mb-6"
