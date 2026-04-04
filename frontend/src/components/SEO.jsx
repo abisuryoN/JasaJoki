@@ -7,7 +7,7 @@ const SEO = ({ title, description, keywords, ogImage, canonicalUrl }) => {
     const defaultDescription = "DualCode - Solusi Jasa Pembuatan Web & Pengerjaan Project IT Terpercaya. Bantu tugas koding, website perusahaan, dan project startup dengan kualitas premium.";
     const metaDescription = description || defaultDescription;
     const metaKeywords = keywords ? `${keywords}, dualcode web, jasa coding` : "dualcode, jasa joki web, jasa joki koding, pengerjaan tugas pemrograman, jasa pembuatan website, joki skripsi informatika";
-    const siteUrl = "https://dualcode.id";
+    const siteUrl = "https://dualcode.vercel.app";
     const fullCanonicalUrl = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
 
     return (
