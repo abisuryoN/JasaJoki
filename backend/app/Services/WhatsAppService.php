@@ -8,14 +8,7 @@ use Illuminate\Support\Str;
 
 class WhatsAppService
 {
-    /**
-     * Admin phone numbers.
-     */
     protected array $adminNumbers;
-
-    /**
-     * Fonnte API token (optional, for automated WA gateway).
-     */
     protected ?string $fonnteToken;
 
     public function __construct()
@@ -26,9 +19,6 @@ class WhatsAppService
         $this->fonnteToken = config('services.whatsapp.fonnte_token');
     }
 
-    /**
-     * Send WhatsApp message to all admin numbers.
-     */
     public function notifyAdmins(string $message): void
     {
         foreach ($this->adminNumbers as $number) {
@@ -36,20 +26,14 @@ class WhatsAppService
         }
     }
 
-    /**
-     * Send WhatsApp message to a specific number.
-     */
     public function send(string $phoneNumber, string $message): bool
     {
-        // Normalize phone number (ensure 62 prefix)
         $phoneNumber = $this->normalizePhoneNumber($phoneNumber);
 
-        // If Fonnte token is configured, use Fonnte API
         if ($this->fonnteToken) {
             return $this->sendViaFonnte($phoneNumber, $message);
         }
 
-        // Fallback: log the message (no gateway configured)
         Log::info('WhatsApp Gateway [NO PROVIDER]', [
             'to' => $phoneNumber,
             'message' => $message,
@@ -58,20 +42,16 @@ class WhatsAppService
         return true;
     }
 
-    /**
-     * Send via Fonnte.com API.
-     * Docs: https://fonnte.com/api
-     */
     protected function sendViaFonnte(string $phoneNumber, string $message): bool
     {
         try {
             $response = Http::withHeaders([
                 'Authorization' => $this->fonnteToken,
             ])->post('https://api.fonnte.com/send', [
-                'target' => $phoneNumber,
-                'message' => $message,
-                'countryCode' => '62',
-            ]);
+                        'target' => $phoneNumber,
+                        'message' => $message,
+                        'countryCode' => '62',
+                    ]);
 
             if ($response->successful()) {
                 Log::info('WhatsApp sent via Fonnte', [
@@ -96,11 +76,6 @@ class WhatsAppService
         }
     }
 
-    /**
-     * Normalize phone number to international format.
-     * 0857... → 62857...
-     * +62857... → 62857...
-     */
     protected function normalizePhoneNumber(string $number): string
     {
         $number = preg_replace('/[^0-9]/', '', $number);
@@ -112,9 +87,6 @@ class WhatsAppService
         return $number;
     }
 
-    /**
-     * Format order notification message.
-     */
     public static function formatNewOrderMessage(object $order, ?object $user = null): string
     {
         $userName = $user?->name ?? $order->guest_name ?? 'Guest';
@@ -133,12 +105,9 @@ class WhatsAppService
             . "• Nama: {$userName}\n"
             . "• Kontak: {$userContact}\n\n"
             . "⚡ Segera cek di dashboard admin!\n"
-            . "🔗 " . config('app.url') . "/admin/orders";
+            . "🔗 " . env('FRONTEND_URL', 'https://dualcode.vercel.app') . "/admin/orders";
     }
 
-    /**
-     * Format payment notification message.
-     */
     public static function formatPaymentMessage(object $order, object $payment): string
     {
         $amount = 'Rp ' . number_format($payment->amount, 0, ',', '.');
@@ -151,19 +120,17 @@ class WhatsAppService
             . "• Status: Menunggu Approval\n\n"
             . "⚡ Segera approve di dashboard admin!";
     }
-    /**
-     * Format new revision notification message.
-     */
+
     public static function formatNewRevisionMessage(object $order, object $revision, ?object $user = null): string
     {
         $userName = $user?->name ?? $order->guest_name ?? 'Guest';
-        
+
         return "🛠️ *REVISI BARU MASUK!*\n\n"
             . "• Order: #{$order->id} - {$order->title}\n"
             . "• Klien: {$userName}\n"
             . "• Catatan Revisi:\n"
             . "\"{$revision->description}\"\n\n"
             . "⚡ Segera cek di dashboard admin!\n"
-            . "🔗 " . config('app.url') . "/admin/revisions";
+            . "🔗 " . env('FRONTEND_URL', 'https://dualcode.vercel.app') . "/admin/revisions";
     }
 }
