@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ['prefix' => 'api', 'middleware' => ['api', 'auth:api']],
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // ✅ SUDAH BERSIH (tidak ada UpdateLastSeen lagi)
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
