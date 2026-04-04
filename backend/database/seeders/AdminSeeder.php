@@ -8,19 +8,20 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => 'admin@dualcode.id'],
-            [
+        // Cek apakah admin sudah ada
+        if (!User::where('email', 'admin@dualcode.id')->exists()) {
+
+            User::create([
                 'name' => 'Admin DualCode',
+                'email' => 'admin@dualcode.id',
                 'password' => Hash::make('admin123'),
                 'role' => 'admin',
                 'email_verified_at' => now(),
-            ]
-        );
+                'is_default_password' => 1,
+            ]);
+
+        }
     }
 }
