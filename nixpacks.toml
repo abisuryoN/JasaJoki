@@ -7,9 +7,14 @@ nixPkgs = [
   "php83Extensions.xml",
   "php83Extensions.curl",
   "php83Extensions.zip",
-  "php83Extensions.tokenizer",
-  "composer"
+  "php83Extensions.tokenizer"
 ]
 
 [phases.build]
-cmds = ["cd backend && composer install --no-dev --optimize-autoloader"]
+cmds = [
+  "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
+  "cd backend && /usr/local/bin/composer install --no-dev --optimize-autoloader"
+]
+
+[start]
+cmd = "cd backend && php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=$PORT"
